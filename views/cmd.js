@@ -70,7 +70,7 @@ window.Views.cmd = (function () {
         var country = DATA.countries.find(function (c) { return c.name === openStay.country; });
         var flag = country ? country.flag : '';
         var maxStay = country ? country.maxStay : '?';
-        container.innerHTML = '<span class="location-text">Aktuell: ' + flag + ' ' + openStay.country + ' \u2014 Tag ' + daysSince + ' von ' + maxStay + '</span>';
+        container.innerHTML = '<span class="location-text">Aktuell: ' + flag + ' ' + DateUtils.escapeHtml(openStay.country) + ' \u2014 Tag ' + daysSince + ' von ' + maxStay + '</span>';
         container.className = 'current-location-banner active';
       } else {
         container.innerHTML = '<span class="location-text">Kein aktiver Aufenthalt eingetragen</span>';
@@ -185,13 +185,14 @@ window.Views.cmd = (function () {
     });
 
     // Open items
+    var esc = DateUtils.escapeHtml;
     var openItemsEl = document.getElementById('openItems');
     openItemsEl.innerHTML = DATA.openItems.map(function (item) {
       return '\
         <div class="open-item">\
-          <div class="open-item-title">' + item.title + '</div>\
-          <div class="open-item-desc">' + item.desc + '</div>\
-          <div class="open-item-status ' + item.status + '">' + item.statusText + '</div>\
+          <div class="open-item-title">' + esc(item.title) + '</div>\
+          <div class="open-item-desc">' + esc(item.desc) + '</div>\
+          <div class="open-item-status ' + item.status + '">' + esc(item.statusText) + '</div>\
         </div>';
     }).join('');
 
@@ -216,8 +217,52 @@ window.Views.cmd = (function () {
     var viewEl = document.getElementById('view-command-center');
     renderCurrentLocation(viewEl);
 
+    // Deutschland-Zähler
+    renderDeutschlandCounter(viewEl);
+
     // FIX 6: Export-Button
     renderExportButton(viewEl);
+  }
+
+  function renderDeutschlandCounter(viewEl) {
+    var container = document.getElementById('deutschlandCounter');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'deutschlandCounter';
+      container.className = 'current-location-banner';
+      // Insert after location banner
+      var locBanner = document.getElementById('currentLocationBanner');
+      if (locBanner && locBanner.nextSibling) {
+        viewEl.insertBefore(container, locBanner.nextSibling);
+      } else {
+        viewEl.insertBefore(container, viewEl.firstChild);
+      }
+    }
+
+    DB.loadStays().then(function (stays) {
+      var currentYear = new Date().getFullYear();
+      var yearStart = new Date(currentYear, 0, 1);
+      yearStart.setHours(0, 0, 0, 0);
+      var yearEnd = new Date(currentYear, 11, 31);
+      yearEnd.setHours(0, 0, 0, 0);
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var totalDays = 0;
+      stays.forEach(function (s) {
+        if (s.country !== 'Deutschland') return;
+        var entry = DateUtils.parseLocalDate(s.entry_date);
+        var exit = s.exit_date ? DateUtils.parseLocalDate(s.exit_date) : today;
+        if (exit < yearStart || entry > yearEnd) return;
+        var start = entry < yearStart ? yearStart : entry;
+        var end = exit > yearEnd ? yearEnd : exit;
+        var days = DateUtils.daysBetween(start, end);
+        if (days > 0) totalDays += days + 1;
+        else if (days === 0) totalDays += 1;
+      });
+      var colorClass = totalDays >= 25 ? 'active' : 'inactive';
+      container.innerHTML = '<span class="location-text">\u{1F1E9}\u{1F1EA} Deutschland ' + currentYear + ': ' + totalDays + ' Tage (Ziel: &lt;30)</span>';
+      container.className = 'current-location-banner ' + colorClass;
+    });
   }
 
   function renderExportButton(viewEl) {
@@ -307,16 +352,17 @@ window.Views.cmd = (function () {
           daysUntil = 'in ' + days + ' Tagen';
         }
       }
+      var esc = DateUtils.escapeHtml;
       return '\
         <div class="compliance-item' + urgencyClass + '">\
-          <div class="compliance-firm">' + item.firm + '</div>\
+          <div class="compliance-firm">' + esc(item.firm) + '</div>\
           <div class="compliance-body">\
-            <div class="compliance-task">' + item.task + '</div>\
+            <div class="compliance-task">' + esc(item.task) + '</div>\
             <div class="compliance-meta">\
-              <span class="compliance-date">' + item.dueDateStr + (daysUntil ? ' (' + daysUntil + ')' : '') + '</span>\
-              <span class="compliance-interval">' + item.interval + '</span>\
+              <span class="compliance-date">' + esc(item.dueDateStr) + (daysUntil ? ' (' + esc(daysUntil) + ')' : '') + '</span>\
+              <span class="compliance-interval">' + esc(item.interval) + '</span>\
             </div>\
-            ' + (item.note ? '<div class="compliance-note">' + item.note + '</div>' : '') + '\
+            ' + (item.note ? '<div class="compliance-note">' + esc(item.note) + '</div>' : '') + '\
           </div>\
         </div>';
     }).join('');

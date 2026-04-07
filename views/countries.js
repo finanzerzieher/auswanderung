@@ -6,6 +6,30 @@ window.Views = window.Views || {};
 window.Views.countries = (function () {
   var stays = [];
 
+  // Calculate days in a specific calendar year (Jan 1 - Dec 31)
+  function calcDaysInCalendarYear(countryName, year) {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yearStart = new Date(year, 0, 1);
+    yearStart.setHours(0, 0, 0, 0);
+    var yearEnd = new Date(year, 11, 31);
+    yearEnd.setHours(0, 0, 0, 0);
+    var total = 0;
+    stays.forEach(function (s) {
+      if (s.country !== countryName) return;
+      var entry = window.DateUtils.parseLocalDate(s.entry_date);
+      var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
+      // Clamp to calendar year
+      if (exit < yearStart || entry > yearEnd) return;
+      var start = entry < yearStart ? yearStart : entry;
+      var end = exit > yearEnd ? yearEnd : exit;
+      var days = window.DateUtils.daysBetween(start, end);
+      if (days > 0) total += days + 1;
+      else if (days === 0) total += 1;
+    });
+    return total;
+  }
+
   // Calculate days used respecting the country's rule type
   function calcDaysUsed(countryName) {
     var today = new Date();
@@ -65,6 +89,11 @@ window.Views.countries = (function () {
         return Math.max(0, days > 0 ? days + 1 : (days === 0 ? 1 : 0));
       }
       return 0;
+    }
+
+    if (ruleType === 'calendar_year') {
+      // Days in the current calendar year only
+      return calcDaysInCalendarYear(countryName, today.getFullYear());
     }
 
     // Default: sum all days (for 183-day tax tracking etc.)
@@ -146,6 +175,7 @@ window.Views.countries = (function () {
     if (ruleType === 'per_entry') return 'pro Einreise';
     if (ruleType === 'rolling') return 'je ' + (windowDays || 180) + ' Tage';
     if (ruleType === 'continuous') return 'am St\u00fcck';
+    if (ruleType === 'calendar_year') return 'pro Kalenderjahr';
     return 'gesamt';
   }
 
@@ -162,10 +192,14 @@ window.Views.countries = (function () {
       var isSchengen = c.schengen || window.Schengen.isSchengen(c.name);
       var schengenBadge = isSchengen ? '<span class="schengen-badge">Schengen</span>' : '';
       var ruleHint = ruleTypeLabel(c.ruleType, c.windowDays);
-      // COMP-05: 183-Tage-Warnung (basierend auf totalDays, nicht ruleType-spezifisch)
+      // COMP-05: Steuerresidenz-Warnung (Kalenderjahr, länderspezifisch)
       var taxWarning = '';
-      if (totalDays > 150) {
-        taxWarning = '<div class="tax-residence-warning">Achtung: 183-Tage-Schwelle naht \u2014 m\u00f6gliche Steuerresidenz</div>';
+      var taxThreshold = c.taxThreshold || 183;
+      var currentYear = new Date().getFullYear();
+      var daysInYear = calcDaysInCalendarYear(c.name, currentYear);
+      var taxWarnThreshold = Math.max(0, taxThreshold - 30); // Warnung 30 Tage vorher
+      if (daysInYear > taxWarnThreshold) {
+        taxWarning = '<div class="tax-residence-warning">Achtung: ' + daysInYear + ' von ' + taxThreshold + ' Tagen in ' + DateUtils.escapeHtml(c.name) + ' (Kalenderjahr ' + currentYear + ') \u2014 Steuerresidenz-Schwelle naht</div>';
       }
       return '\
         <div class="country-card">\
@@ -217,20 +251,21 @@ window.Views.countries = (function () {
       var flag = country ? country.flag : (window.CountriesDB ? window.CountriesDB.getFlag(s.country) : '');
       var hasRules = !!country && country.rules && country.rules.length > 0;
       // FIX 4: Warnung bei vergessener Ausreise (>90 Tage offen)
+      var esc = window.DateUtils.escapeHtml;
       var forgottenWarning = '';
       if (isOpen && days > 90) {
-        forgottenWarning = '<div class="stay-forgotten-warning">Bist du noch in ' + s.country + '? Dieser Aufenthalt ist seit ' + days + ' Tagen offen.</div>';
+        forgottenWarning = '<div class="stay-forgotten-warning">Bist du noch in ' + esc(s.country) + '? Dieser Aufenthalt ist seit ' + days + ' Tagen offen.</div>';
       }
       return '\
         <div class="stay-item" data-stay-id="' + s.id + '">\
           <div class="stay-item-main">\
-            <div class="stay-item-country">' + flag + ' ' + s.country + (hasRules ? ' <span class="stay-info-hint">ⓘ</span>' : '') + '</div>\
+            <div class="stay-item-country">' + flag + ' ' + esc(s.country) + (hasRules ? ' <span class="stay-info-hint">\u24D8</span>' : '') + '</div>\
             <div class="stay-item-dates">\
               ' + window.DateUtils.formatDate(s.entry_date) + ' \u2014 ' +
               (s.exit_date ? window.DateUtils.formatDate(s.exit_date) : '<span class="stay-badge-active">noch da</span>') + '\
             </div>\
             <div class="stay-item-days">' + days + ' Tage' + (isOpen ? ' (laufend)' : '') + '</div>\
-            ' + (s.notes ? '<div class="stay-item-notes">' + s.notes + '</div>' : '') + '\
+            ' + (s.notes ? '<div class="stay-item-notes">' + esc(s.notes) + '</div>' : '') + '\
             ' + forgottenWarning + '\
           </div>\
           <div class="stay-item-actions">\
@@ -277,6 +312,7 @@ window.Views.countries = (function () {
   }
 
   function showCountryInfo(countryName) {
+    var esc = window.DateUtils.escapeHtml;
     var country = DATA.countries.find(function (c) { return c.name === countryName; });
     var dbEntry = window.CountriesDB ? window.CountriesDB.getByName(countryName) : null;
     var flag = country ? country.flag : (dbEntry ? dbEntry.flag : '');
@@ -288,7 +324,7 @@ window.Views.countries = (function () {
     var rulesHtml = '';
     if (country && country.rules) {
       rulesHtml = country.rules.map(function (r) {
-        return '<div class="info-rule"><span class="info-rule-label">' + r.label + '</span><span class="info-rule-value">' + r.value + '</span></div>';
+        return '<div class="info-rule"><span class="info-rule-label">' + esc(r.label) + '</span><span class="info-rule-value">' + esc(r.value) + '</span></div>';
       }).join('');
     } else {
       rulesHtml = '<div class="info-no-rules">Keine Visa-Infos hinterlegt f\u00fcr dieses Land.</div>';
@@ -312,7 +348,7 @@ window.Views.countries = (function () {
       <div class="doc-dialog info-dialog">\
         <div class="info-header">\
           <span class="info-flag">' + flag + '</span>\
-          <span class="info-title">' + countryName + '</span>\
+          <span class="info-title">' + esc(countryName) + '</span>\
           ' + (isSchengen ? '<span class="ac-item-badge">Schengen</span>' : '') + '\
         </div>\
         ' + maxStayHtml + '\

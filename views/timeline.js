@@ -27,7 +27,7 @@ window.Views.timeline = (function () {
           <div class="timeline-desc">' + m.desc + '</div>\
           ' + (m.deps ? '<div class="timeline-deps">Abh\u00e4ngig von: ' + m.deps + '</div>' : '') + '\
           <div class="milestone-note-section" data-milestone-id="' + id + '" data-milestone-title="' + m.title.replace(/"/g, '&quot;') + '">\
-            ' + (existingNote ? '<div class="milestone-note-text">' + existingNote + '</div>' : '') + '\
+            ' + (existingNote ? '<div class="milestone-note-text">' + DateUtils.escapeHtml(existingNote) + '</div>' : '') + '\
             <button class="milestone-note-btn" data-milestone-id="' + id + '">' + (existingNote ? 'Notiz bearbeiten' : 'Notiz') + '</button>\
           </div>\
         </div>';

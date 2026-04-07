@@ -97,7 +97,7 @@ window.Views.costs = (function () {
       html += '\
         <div class="cost-group">\
           <div class="cost-group-header">\
-            <div class="cost-group-title">' + firm.name + '</div>\
+            <div class="cost-group-title">' + DateUtils.escapeHtml(firm.name) + '</div>\
             <div class="cost-group-count">' + firmCosts.length + ' Posten</div>\
           </div>';
 
@@ -105,13 +105,14 @@ window.Views.costs = (function () {
         html += '<div class="cost-empty">Keine Kosten erfasst</div>';
       } else {
         firmCosts.forEach(function (c) {
+          var esc = DateUtils.escapeHtml;
           html += '\
             <div class="cost-item" data-cost-id="' + c.id + '">\
               <div class="cost-item-main">\
-                <div class="cost-item-label">' + c.label + '</div>\
+                <div class="cost-item-label">' + esc(c.label) + '</div>\
                 <div class="cost-item-meta">\
-                  <span class="cost-item-interval">' + intervalLabel(c.interval) + '</span>\
-                  ' + (c.notes ? '<span class="cost-item-notes">' + c.notes + '</span>' : '') + '\
+                  <span class="cost-item-interval">' + esc(intervalLabel(c.interval)) + '</span>\
+                  ' + (c.notes ? '<span class="cost-item-notes">' + esc(c.notes) + '</span>' : '') + '\
                 </div>\
               </div>\
               <div class="cost-item-amount">' + fmt.format(Number(c.amount)) + '</div>\

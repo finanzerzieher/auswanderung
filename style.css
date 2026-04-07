@@ -1261,6 +1261,15 @@ body {
   color: var(--passport);
 }
 
+@media (hover: none) {
+  .stay-item-delete,
+  .stay-item-edit,
+  .doc-card-delete,
+  .doc-checklist-edit {
+    opacity: 0.7;
+  }
+}
+
 .stay-info-hint {
   font-size: 12px;
   color: var(--ink-muted);

@@ -295,12 +295,30 @@ const DATA = {
   // Länder mit Visa-Regeln
   countries: [
     {
+      name: 'Deutschland',
+      flag: '\u{1F1E9}\u{1F1EA}',
+      maxStay: 30,
+      stayUnit: 'Tage/Jahr',
+      daysUsed: 0,
+      ruleType: 'calendar_year',
+      taxThreshold: 30,
+      taxThresholdType: 'calendar_year',
+      schengen: true,
+      rules: [
+        { label: 'Status', value: 'Abgemeldet seit 02.06.2026' },
+        { label: 'Risiko', value: 'Erw. beschr. Steuerpflicht bis 2036 (\u00a72 AStG)' },
+        { label: 'Empfehlung', value: 'Max. 30 Tage/Jahr, keine Schl\u00fcsselgewalt' },
+        { label: 'Achtung', value: 'Nicht bei Karina melden!' }
+      ]
+    },
+    {
       name: 'Thailand',
       flag: '🇹🇭',
       maxStay: 60,
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry', // Max Tage pro Einreise
+      taxThreshold: 180, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa Exemption 60 Tage' },
         { label: 'Verlängerung', value: '+30 Tage (Immigration Office)' },
@@ -315,6 +333,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 182, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage' },
         { label: 'DE2 Visa', value: 'Digital Nomad Visa, 1 Jahr' },
@@ -328,6 +347,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'continuous', // Max ununterbrochener Aufenthalt
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 1 Jahr' },
         { label: 'Steuer', value: 'Territorial — Auslandseinkommen steuerfrei' },
@@ -341,6 +361,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'VoA 30 Tage, verlängerbar auf 60' },
         { label: 'B211A', value: '60 Tage Business Visa' },
@@ -354,6 +375,7 @@ const DATA = {
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
       ruleType: 'rolling', // Schengen 90/180
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       windowDays: 180,
       schengen: true,
       rules: [
@@ -369,6 +391,7 @@ const DATA = {
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
       ruleType: 'rolling', // 90 Tage je 180 Tage
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       windowDays: 180,
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage je 180 Tage' },
@@ -383,6 +406,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'E-Visa 90 Tage (Single/Multiple Entry)' },
         { label: 'Verl\u00e4ngerung', value: 'Vor Ort m\u00f6glich' },
@@ -396,6 +420,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa on Arrival 30 Tage (~$30)' },
         { label: 'Verl\u00e4ngerung', value: 'Ordinary Visa (E-Type) verl\u00e4ngerbar' },
@@ -410,6 +435,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa on Arrival 30 Tage' },
         { label: 'Steuer', value: 'Nur lokales Einkommen' },
@@ -423,6 +449,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
         { label: 'Verl\u00e4ngerung', value: 'Nicht m\u00f6glich \u2014 Ausreise n\u00f6tig' },
@@ -436,6 +463,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage (K-ETA n\u00f6tig)' },
         { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
@@ -448,6 +476,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 180 Tage (FMM-Karte)' },
         { label: 'Steuer', value: 'Nur bei >183 Tagen oder lokaler T\u00e4tigkeit' },
@@ -461,6 +490,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
+      taxThreshold: 120, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
         { label: 'Steuer', value: 'Territorial \u2014 nur lokales Einkommen' },
@@ -482,7 +512,10 @@ const DATA = {
     { firm: 'Einzelunternehmen', task: 'IHK-Beitrag', dueMonth: 3, dueDay: 31, interval: 'jährlich', note: '' },
     { firm: 'Einzelunternehmen', task: 'Berufshaftpflicht-Verlängerung', dueMonth: null, dueDay: null, interval: 'jährlich', note: 'Genaues Datum prüfen' },
     { firm: 'LLC', task: 'Wise Business Statement', dueMonth: null, dueDay: null, interval: 'monatlich', note: '' },
-    { firm: 'Einzelunternehmen', task: 'Steuererklärung', dueMonth: 7, dueDay: 31, interval: 'jährlich', note: 'Nuller-Erklärung' }
+    { firm: 'Einzelunternehmen', task: 'Steuererklärung', dueMonth: 7, dueDay: 31, interval: 'jährlich', note: 'Nuller-Erklärung' },
+    { firm: 'LLC', task: 'Form 5472 + Pro-Forma 1120 (IRS)', dueMonth: 4, dueDay: 15, interval: 'jährlich', note: '$25.000 Strafe bei Nichtabgabe! Alle Transaktionen LLC \u2194 Viktor melden.' },
+    { firm: 'LLC', task: 'BOI Report (FinCEN)', dueMonth: null, dueDay: null, interval: 'jährlich', note: 'Beneficial Ownership \u2014 Status pr\u00fcfen, rechtlich umstritten seit 2024' },
+    { firm: 'LLC', task: 'Registered Agent Zahlung', dueMonth: null, dueDay: null, interval: 'jährlich', note: 'Ohne RA wird LLC aufgel\u00f6st' }
   ],
 
   // Firmenstruktur
