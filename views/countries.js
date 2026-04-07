@@ -130,10 +130,11 @@ window.Views.countries = (function () {
       var isOpen = !s.exit_date;
       var country = DATA.countries.find(function (c) { return c.name === s.country; });
       var flag = country ? country.flag : (window.CountriesDB ? window.CountriesDB.getFlag(s.country) : '');
+      var hasRules = !!country && country.rules && country.rules.length > 0;
       return '\
-        <div class="stay-item">\
+        <div class="stay-item" data-stay-id="' + s.id + '">\
           <div class="stay-item-main">\
-            <div class="stay-item-country">' + flag + ' ' + s.country + '</div>\
+            <div class="stay-item-country">' + flag + ' ' + s.country + (hasRules ? ' <span class="stay-info-hint">ⓘ</span>' : '') + '</div>\
             <div class="stay-item-dates">\
               ' + window.DateUtils.formatDate(s.entry_date) + ' \u2014 ' +
               (s.exit_date ? window.DateUtils.formatDate(s.exit_date) : '<span class="stay-badge-active">noch da</span>') + '\
@@ -141,12 +142,37 @@ window.Views.countries = (function () {
             <div class="stay-item-days">' + days + ' Tage' + (isOpen ? ' (laufend)' : '') + '</div>\
             ' + (s.notes ? '<div class="stay-item-notes">' + s.notes + '</div>' : '') + '\
           </div>\
-          <button class="stay-item-delete" data-id="' + s.id + '" title="L\u00f6schen">\u00d7</button>\
+          <div class="stay-item-actions">\
+            <button class="stay-item-edit" data-id="' + s.id + '" title="Bearbeiten">\u270E</button>\
+            <button class="stay-item-delete" data-id="' + s.id + '" title="L\u00f6schen">\u00d7</button>\
+          </div>\
         </div>';
     }).join('');
 
+    // Click on stay item → show country info
+    container.querySelectorAll('.stay-item').forEach(function (item) {
+      item.addEventListener('click', function (e) {
+        if (e.target.closest('.stay-item-edit') || e.target.closest('.stay-item-delete')) return;
+        var stayId = item.dataset.stayId;
+        var stay = stays.find(function (s) { return s.id === stayId; });
+        if (stay) showCountryInfo(stay.country);
+      });
+    });
+
+    // Edit stay
+    container.querySelectorAll('.stay-item-edit').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.dataset.id;
+        var stay = stays.find(function (s) { return s.id === id; });
+        if (stay) openStayDialog(stay);
+      });
+    });
+
+    // Delete stay
     container.querySelectorAll('.stay-item-delete').forEach(function (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
         var id = btn.dataset.id;
         if (!confirm('Aufenthalt wirklich l\u00f6schen?')) return;
         DB.deleteStay(id).then(function () {
@@ -159,17 +185,79 @@ window.Views.countries = (function () {
     });
   }
 
-  function openStayDialog() {
+  function showCountryInfo(countryName) {
+    var country = DATA.countries.find(function (c) { return c.name === countryName; });
+    var dbEntry = window.CountriesDB ? window.CountriesDB.getByName(countryName) : null;
+    var flag = country ? country.flag : (dbEntry ? dbEntry.flag : '');
+    var isSchengen = (country && country.schengen) || (window.Schengen && window.Schengen.isSchengen(countryName));
+
+    // Calculate total days in this country
+    var totalDays = calcDaysUsed(countryName);
+
+    var rulesHtml = '';
+    if (country && country.rules) {
+      rulesHtml = country.rules.map(function (r) {
+        return '<div class="info-rule"><span class="info-rule-label">' + r.label + '</span><span class="info-rule-value">' + r.value + '</span></div>';
+      }).join('');
+    } else {
+      rulesHtml = '<div class="info-no-rules">Keine Visa-Infos hinterlegt f\u00fcr dieses Land.</div>';
+    }
+
+    var maxStayHtml = '';
+    if (country && country.maxStay) {
+      var pct = Math.round((totalDays / country.maxStay) * 100);
+      if (pct > 100) pct = 100;
+      var fillClass = pct < 60 ? 'safe' : pct < 85 ? 'caution' : 'danger';
+      maxStayHtml = '\
+        <div class="info-stay-bar">\
+          <div class="country-stay-bar"><div class="country-stay-fill ' + fillClass + '" style="width:' + pct + '%"></div></div>\
+          <div class="country-stay-text"><span>' + totalDays + ' von ' + country.maxStay + ' ' + (country.stayUnit || 'Tage') + '</span><span>' + Math.max(0, country.maxStay - totalDays) + ' \u00fcbrig</span></div>\
+        </div>';
+    }
+
+    var overlay = document.createElement('div');
+    overlay.className = 'doc-dialog-overlay';
+    overlay.innerHTML = '\
+      <div class="doc-dialog info-dialog">\
+        <div class="info-header">\
+          <span class="info-flag">' + flag + '</span>\
+          <span class="info-title">' + countryName + '</span>\
+          ' + (isSchengen ? '<span class="ac-item-badge">Schengen</span>' : '') + '\
+        </div>\
+        ' + maxStayHtml + '\
+        <div class="info-section-title">Visa & Regeln</div>\
+        <div class="info-rules">' + rulesHtml + '</div>\
+        <div class="info-stats">\
+          <div class="info-stat"><span class="info-stat-value">' + totalDays + '</span><span class="info-stat-label">Tage gesamt</span></div>\
+          <div class="info-stat"><span class="info-stat-value">' + stays.filter(function(s){ return s.country === countryName; }).length + '</span><span class="info-stat-label">Aufenthalte</span></div>\
+        </div>\
+        <div class="doc-dialog-actions">\
+          <button class="doc-btn-cancel" id="infoCloseBtn">Schlie\u00dfen</button>\
+        </div>\
+      </div>';
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) overlay.remove();
+    });
+    document.getElementById('infoCloseBtn').addEventListener('click', function () {
+      overlay.remove();
+    });
+  }
+
+  function openStayDialog(editStay) {
     // Remove existing dialog
     var existing = document.getElementById('stayDialogOverlay');
     if (existing) existing.remove();
+
+    var isEdit = !!editStay;
 
     var overlay = document.createElement('div');
     overlay.id = 'stayDialogOverlay';
     overlay.className = 'doc-dialog-overlay';
     overlay.innerHTML = '\
       <div class="doc-dialog stay-dialog">\
-        <div class="doc-dialog-title">Aufenthalt erfassen</div>\
+        <div class="doc-dialog-title">' + (isEdit ? 'Aufenthalt bearbeiten' : 'Aufenthalt erfassen') + '</div>\
         <label for="stayCountry">Land</label>\
         <input type="text" id="stayCountry" placeholder="Land eingeben..." autocomplete="off" required>\
         <label for="stayEntry">Einreise</label>\
@@ -202,9 +290,16 @@ window.Views.countries = (function () {
       }
     });
 
-    // Set default entry date to today
-    var todayStr = new Date().toISOString().split('T')[0];
-    document.getElementById('stayEntry').value = todayStr;
+    // Fill values
+    if (isEdit) {
+      stayCountryInput.value = editStay.country;
+      document.getElementById('stayEntry').value = editStay.entry_date;
+      document.getElementById('stayExit').value = editStay.exit_date || '';
+      document.getElementById('stayNotes').value = editStay.notes || '';
+    } else {
+      var todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('stayEntry').value = todayStr;
+    }
 
     // Close on overlay click
     overlay.addEventListener('click', function (e) {
@@ -227,7 +322,7 @@ window.Views.countries = (function () {
       }
 
       var stay = {
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        id: isEdit ? editStay.id : Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         country: country,
         entry_date: entryDate,
         exit_date: exitDate || null,
@@ -235,7 +330,12 @@ window.Views.countries = (function () {
       };
 
       DB.saveStay(stay).then(function () {
-        stays.unshift(stay);
+        if (isEdit) {
+          var idx = stays.findIndex(function (s) { return s.id === stay.id; });
+          if (idx >= 0) stays[idx] = stay;
+        } else {
+          stays.unshift(stay);
+        }
         renderCards();
         renderSchengenCounter();
         renderHistory();
