@@ -124,5 +124,47 @@ const DB = {
       await sb.storage.from('documents').remove([storagePath]);
       await sb.from('documents').delete().eq('id', id);
     } catch (e) { console.warn('deleteDoc:', e); }
+  },
+
+  // --- Stay Log ---
+
+  async loadStays() {
+    if (!sb) return [];
+    try {
+      const { data, error } = await sb
+        .from('stay_log')
+        .select('*')
+        .order('entry_date', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch (e) { console.warn('loadStays:', e); return []; }
+  },
+
+  async saveStay(stay) {
+    if (!sb) return;
+    try {
+      const { error } = await sb
+        .from('stay_log')
+        .upsert({
+          id: stay.id,
+          country: stay.country,
+          entry_date: stay.entry_date,
+          exit_date: stay.exit_date || null,
+          notes: stay.notes || null,
+          created_at: new Date().toISOString()
+        });
+      if (error) throw error;
+    } catch (e) { console.warn('saveStay:', e); throw e; }
+  },
+
+  async deleteStay(id) {
+    if (!sb) return;
+    try {
+      const { error } = await sb
+        .from('stay_log')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    } catch (e) { console.warn('deleteStay:', e); throw e; }
   }
 };
