@@ -30,6 +30,31 @@ window.Views.countries = (function () {
     return total;
   }
 
+  // Rolling 12-month check: max days in ANY 365-day window ending on or before today
+  // This catches cases where someone is <183 in both calendar years but >183 in a rolling window
+  function calcDaysInRollingYear(countryName) {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var countryStays = stays.filter(function (s) { return s.country === countryName; });
+    if (countryStays.length === 0) return 0;
+
+    // Check the rolling 365-day window ending today
+    var windowStart = new Date(today);
+    windowStart.setDate(windowStart.getDate() - 365);
+    var total = 0;
+    countryStays.forEach(function (s) {
+      var entry = window.DateUtils.parseLocalDate(s.entry_date);
+      var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
+      if (exit < windowStart) return;
+      if (entry < windowStart) entry = windowStart;
+      if (exit > today) exit = today;
+      var days = window.DateUtils.daysBetween(entry, exit);
+      if (days > 0) total += days + 1;
+      else if (days === 0) total += 1;
+    });
+    return total;
+  }
+
   // Calculate days used respecting the country's rule type
   function calcDaysUsed(countryName) {
     var today = new Date();
@@ -192,14 +217,23 @@ window.Views.countries = (function () {
       var isSchengen = c.schengen || window.Schengen.isSchengen(c.name);
       var schengenBadge = isSchengen ? '<span class="schengen-badge">Schengen</span>' : '';
       var ruleHint = ruleTypeLabel(c.ruleType, c.windowDays);
-      // COMP-05: Steuerresidenz-Warnung (Kalenderjahr, länderspezifisch)
+      // COMP-05: Steuerresidenz-Warnung — Kalenderjahr ODER rollendes Jahr
       var taxWarning = '';
       var taxThreshold = c.taxThreshold || 183;
+      var taxType = c.taxThresholdType || 'calendar_year';
       var currentYear = new Date().getFullYear();
-      var daysInYear = calcDaysInCalendarYear(c.name, currentYear);
-      var taxWarnThreshold = Math.max(0, taxThreshold - 30); // Warnung 30 Tage vorher
-      if (daysInYear > taxWarnThreshold) {
-        taxWarning = '<div class="tax-residence-warning">Achtung: ' + daysInYear + ' von ' + taxThreshold + ' Tagen in ' + DateUtils.escapeHtml(c.name) + ' (Kalenderjahr ' + currentYear + ') \u2014 Steuerresidenz-Schwelle naht</div>';
+      var taxWarnThreshold = Math.max(0, taxThreshold - 30);
+
+      if (taxType === 'rolling_year') {
+        var daysRolling = calcDaysInRollingYear(c.name);
+        if (daysRolling > taxWarnThreshold) {
+          taxWarning = '<div class="tax-residence-warning">Achtung: ' + daysRolling + ' von ' + taxThreshold + ' Tagen in ' + DateUtils.escapeHtml(c.name) + ' (letzte 12 Monate, rollierend) \u2014 Steuerresidenz-Schwelle naht</div>';
+        }
+      } else {
+        var daysInYear = calcDaysInCalendarYear(c.name, currentYear);
+        if (daysInYear > taxWarnThreshold) {
+          taxWarning = '<div class="tax-residence-warning">Achtung: ' + daysInYear + ' von ' + taxThreshold + ' Tagen in ' + DateUtils.escapeHtml(c.name) + ' (Kalenderjahr ' + currentYear + ') \u2014 Steuerresidenz-Schwelle naht</div>';
+        }
       }
       return '\
         <div class="country-card">\

@@ -375,11 +375,12 @@ const DATA = {
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
       ruleType: 'rolling', // Schengen 90/180
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'rolling_year',
       windowDays: 180,
       schengen: true,
       rules: [
         { label: 'Visum', value: 'Schengen 90/180 Tage' },
+        { label: 'Steuer', value: '183 Tage in beliebigem 12-Monats-Zeitraum = steuerpflichtig!' },
         { label: 'NHR', value: 'Non-Habitual Resident — Sonderstatus' },
         { label: 'Achtung', value: 'Zählt gegen Schengen-Kontingent' }
       ]
@@ -476,10 +477,10 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'rolling_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 180 Tage (FMM-Karte)' },
-        { label: 'Steuer', value: 'Nur bei >183 Tagen oder lokaler T\u00e4tigkeit' },
+        { label: 'Steuer', value: '183 Tage in beliebigem 12-Monats-Zeitraum = steuerpflichtig!' },
         { label: 'Tipp', value: 'Beliebte Langzeit-Base f\u00fcr PTs (Playa, CDMX)' }
       ]
     },
