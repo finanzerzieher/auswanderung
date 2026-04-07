@@ -48,11 +48,20 @@ const DATA = {
   // Meilensteine / Zeitstrahl
   milestones: [
     {
-      date: '2026-04-07',
+      date: '2026-04-15',
       title: 'Internationale KV recherchieren',
-      desc: 'SafetyWing, Foyer, Passportcard vergleichen und abschließen',
+      desc: 'SafetyWing, Foyer, Passportcard vergleichen',
       status: 'active',
       phase: 'prep'
+    },
+    {
+      date: '2026-05-15',
+      title: 'Internationale KV abschlie\u00dfen',
+      desc: 'Muss VOR K\u00fcndigung der deutschen KV stehen. Ohne internationale KV keine Absicherung nach Abmeldung!',
+      status: 'upcoming',
+      phase: 'prep',
+      deps: 'Recherche abgeschlossen',
+      critical: true
     },
     {
       date: '2026-04-07',
@@ -63,8 +72,8 @@ const DATA = {
     },
     {
       date: '2026-04-14',
-      title: 'Caya: Alternativ-Adresse anfragen',
-      desc: 'Adresse ohne "Postbox" im Namen — wird nicht automatisch angezeigt, muss aktiv angefragt werden',
+      title: 'Caya: Alternativ-Adresse f\u00fcr Einzelunternehmen anfragen',
+      desc: 'F\u00fcr das Einzelunternehmen: Caya-Adresse OHNE "Postbox" im Namen anfragen. Das ist NICHT die LLC-Compliance-Adresse!',
       status: 'upcoming',
       phase: 'prep'
     },
@@ -124,20 +133,36 @@ const DATA = {
       critical: true
     },
     {
-      date: '2026-06-20',
+      date: '2026-06-15',
       title: 'LLC-Dokumente empfangen',
-      desc: 'LLC-Unterlagen in Bangkok empfangen, EIN beantragen',
+      desc: 'LLC-Unterlagen in Bangkok empfangen (Operating Agreement, Articles of Organization)',
       status: 'upcoming',
       phase: 'llc',
       deps: 'LLC muss beauftragt sein'
     },
     {
+      date: '2026-06-15',
+      title: 'EIN beantragen (Express)',
+      desc: 'US-Steuernummer f\u00fcr die LLC \u2014 \u00fcber Finanznoma Express in wenigen Tagen. Ohne EIN kein Bankkonto!',
+      status: 'upcoming',
+      phase: 'llc',
+      deps: 'LLC-Dokumente m\u00fcssen vorliegen'
+    },
+    {
+      date: '2026-06-20',
+      title: 'DBA-Registrierung (Doing Business As)',
+      desc: '"Viktor Frickel" als DBA registrieren \u2014 damit LLC ohne "LLC" im Namen auftreten kann',
+      status: 'upcoming',
+      phase: 'llc',
+      deps: 'LLC muss gegr\u00fcndet sein'
+    },
+    {
       date: '2026-07-01',
       title: 'Wise Business einrichten',
-      desc: 'Belgische IBAN + Mercury/Relay US-Konto eröffnen',
+      desc: 'Belgische IBAN + Mercury/Relay US-Konto er\u00f6ffnen',
       status: 'upcoming',
       phase: 'transition',
-      deps: 'LLC-Dokumente müssen vorliegen'
+      deps: 'LLC-Dokumente + EIN m\u00fcssen vorliegen'
     },
     {
       date: '2026-07-15',
@@ -149,11 +174,11 @@ const DATA = {
     },
     {
       date: '2026-07-20',
-      title: 'Fondsfinanz: Rechnungsanschrift ändern',
+      title: 'Fondsfinanz: Rechnungsanschrift \u00e4ndern',
       desc: 'Schritt 2: Auf LLC-Compliance-Adresse umstellen (paar Tage nach Bank)',
       status: 'upcoming',
       phase: 'transition',
-      deps: 'Bankverbindung muss umgestellt sein'
+      deps: 'Bankverbindung muss umgestellt sein UND Compliance-Adresse eingerichtet'
     },
     {
       date: '2026-07-25',
@@ -162,6 +187,23 @@ const DATA = {
       status: 'upcoming',
       phase: 'transition',
       deps: 'Rechnungsanschrift muss umgestellt sein'
+    },
+    {
+      date: '2026-08-01',
+      title: 'Erste Fondsfinanz-Abrechnung pr\u00fcfen',
+      desc: 'Pr\u00fcfen ob Abrechnung korrekt auf LLC l\u00e4uft: richtige IBAN, richtige Adresse, richtige Steuernummer',
+      status: 'upcoming',
+      phase: 'transition',
+      deps: 'Alle 3 Fondsfinanz-Umstellungen m\u00fcssen abgeschlossen sein',
+      critical: true
+    },
+    {
+      date: '2026-11-01',
+      title: 'Paraguay: Compliance-Wohnsitz einrichten',
+      desc: 'Gruppenflug mit Finanznoma. Cedula + Steuer-ID beantragen. Sch\u00fctzt gegen erweiterte Steuerpflicht in Deutschland.',
+      status: 'upcoming',
+      phase: 'travel',
+      deps: 'Finanznoma Gruppenflug'
     }
   ],
 
@@ -186,11 +228,11 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'Caya: Alternativ-Adresse ohne "Postbox" im Namen anfragen',
+      title: 'Caya: Alternativ-Adresse f\u00fcr Einzelunternehmen anfragen',
       date: '2026-04-14',
       tag: 'warning',
-      tagText: 'Bald fällig',
-      dependency: 'Caya zeigt das nicht automatisch — aktiv anfragen!',
+      tagText: 'Bald f\u00e4llig',
+      dependency: 'F\u00fcr das Einzelunternehmen, NICHT f\u00fcr die LLC! Caya zeigt das nicht automatisch.',
       completed: false,
       id: 'caya-alt',
       phase: 'prep'
@@ -203,7 +245,7 @@ const DATA = {
       dependency: 'Erst m\u00f6glich wenn LLC gegr\u00fcndet ist',
       completed: false,
       id: 'compliance-addr',
-      phase: 'prep'
+      phase: 'llc'
     },
     {
       title: 'Erweiterte beschränkte Steuerpflicht prüfen',
@@ -217,12 +259,12 @@ const DATA = {
     },
     {
       title: 'Flug nach Bangkok buchen',
-      date: '2026-06-06',
-      tag: 'info',
-      tagText: 'Planung',
+      date: '2026-05-15',
+      tag: 'warning',
+      tagText: 'Bald f\u00e4llig',
       completed: false,
       id: 'flug',
-      phase: 'travel'
+      phase: 'prep'
     },
     {
       title: 'Abmeldebestätigung mehrfach sichern (digital + physisch)',
