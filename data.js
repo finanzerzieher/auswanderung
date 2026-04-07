@@ -360,6 +360,13 @@ const DATA = {
     }
   ],
 
+  // Countdowns
+  countdowns: [
+    { id: 'deregister', label: 'Abmeldung', date: '2026-06-02', detail: '' },
+    { id: 'llc', label: 'LLC beauftragen', date: '2026-06-03', detail: '1 Tag nach Abmeldung' },
+    { id: 'departure', label: 'Abflug Bangkok', date: '2026-06-06', detail: '' }
+  ],
+
   // Firmenstruktur
   structure: {
     einzelunternehmen: {
