@@ -1,0 +1,16 @@
+{
+  "name": "Auswanderung — PT Command Center",
+  "short_name": "PT Center",
+  "description": "Persönlicher Assistent für Perpetual Travelers",
+  "start_url": "/auswanderung/",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#1e3a5f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

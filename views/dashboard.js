@@ -199,6 +199,53 @@ window.Views.dashboard = (function () {
         html += '<div class="current-location-banner inactive">Kein aktiver Aufenthalt eingetragen</div>';
       }
 
+      // 1b. Deutschland-Besuch-Rechner
+      var currentYear = TODAY.getFullYear();
+      if (window.Schengen) {
+        var schengenResult = window.Schengen.calculate(stays);
+        var schengenRemaining = schengenResult.daysRemaining;
+
+        // DE-Tage im Kalenderjahr berechnen
+        var deCalYear = 0;
+        var cyStart = new Date(currentYear, 0, 1);
+        cyStart.setHours(0, 0, 0, 0);
+        var cyEnd = new Date(currentYear, 11, 31);
+        cyEnd.setHours(0, 0, 0, 0);
+        stays.forEach(function (s) {
+          if (s.country !== 'Deutschland') return;
+          var entry = DateUtils.parseLocalDate(s.entry_date);
+          var exit = s.exit_date ? DateUtils.parseLocalDate(s.exit_date) : TODAY;
+          if (exit < cyStart || entry > cyEnd) return;
+          var start = entry < cyStart ? cyStart : entry;
+          var end = exit > cyEnd ? cyEnd : exit;
+          var days = DateUtils.daysBetween(start, end);
+          if (days > 0) deCalYear += days + 1;
+          else if (days === 0) deCalYear += 1;
+        });
+
+        var deRemaining = Math.max(0, 30 - deCalYear);
+        var canVisit = Math.min(schengenRemaining, deRemaining);
+        var visitColorClass = canVisit > 14 ? 'de-visit-green' : canVisit >= 7 ? 'de-visit-yellow' : canVisit > 0 ? 'de-visit-red' : 'de-visit-zero';
+
+        html += '<div class="de-visit-block ' + visitColorClass + '">';
+        if (canVisit > 0) {
+          html += '<div class="de-visit-number">' + canVisit + ' Tage</div>';
+          html += '<div class="de-visit-subtitle">kannst du nach Deutschland</div>';
+        } else {
+          html += '<div class="de-visit-number">0</div>';
+          html += '<div class="de-visit-subtitle">Aktuell kein Deutschland-Besuch m\u00f6glich</div>';
+        }
+        html += '<div class="de-visit-details">Schengen: ' + schengenResult.daysUsed + '/90 | Deutschland ' + currentYear + ': ' + deCalYear + '/30</div>';
+        html += '</div>';
+      }
+
+      // 1c. Offline-Banner
+      if (DB.isUsingCache()) {
+        var cacheTs = DB._getCacheTimestamp('stays');
+        var cacheTimeStr = cacheTs ? new Date(cacheTs).toLocaleString('de-DE') : 'unbekannt';
+        html += '<div class="offline-banner">Offline-Modus \u2014 Daten vom ' + esc(cacheTimeStr) + '. Verbindung wird gepr\u00fcft...</div>';
+      }
+
       // 2. Warnungen
       var warnings = buildWarnings(stays);
       if (warnings.length > 0) {
@@ -209,33 +256,7 @@ window.Views.dashboard = (function () {
         html += '</div>';
       }
 
-      // 3. Schengen-Counter (kompakt)
-      if (window.Schengen) {
-        var schengen = window.Schengen.calculate(stays);
-        var schengenColor = schengen.daysRemaining < 14 ? 'danger' : schengen.daysRemaining < 30 ? 'caution' : 'safe';
-        html += '<div class="dash-counter dash-schengen-' + schengenColor + '">Schengen: ' + schengen.daysUsed + '/90 Tage \u2014 ' + schengen.daysRemaining + ' verbleibend</div>';
-      }
-
-      // 4. Deutschland-Z\u00e4hler
-      var currentYear = TODAY.getFullYear();
-      var yearStart = new Date(currentYear, 0, 1);
-      yearStart.setHours(0, 0, 0, 0);
-      var yearEnd = new Date(currentYear, 11, 31);
-      yearEnd.setHours(0, 0, 0, 0);
-      var deDays = 0;
-      stays.forEach(function (s) {
-        if (s.country !== 'Deutschland') return;
-        var entry = DateUtils.parseLocalDate(s.entry_date);
-        var exit = s.exit_date ? DateUtils.parseLocalDate(s.exit_date) : TODAY;
-        if (exit < yearStart || entry > yearEnd) return;
-        var start = entry < yearStart ? yearStart : entry;
-        var end = exit > yearEnd ? yearEnd : exit;
-        var days = DateUtils.daysBetween(start, end);
-        if (days > 0) deDays += days + 1;
-        else if (days === 0) deDays += 1;
-      });
-      var deColor = deDays >= 25 ? 'active' : 'inactive';
-      html += '<div class="current-location-banner ' + deColor + '">\ud83c\udde9\ud83c\uddea Deutschland ' + currentYear + ': ' + deDays + ' Tage (Ziel: &lt;30)</div>';
+      // 3. (Schengen + DE-Counter sind jetzt im Deutschland-Besuch-Rechner oben)
 
       // 5. N\u00e4chste Aktionen (Top 5 unerledigte, nach Dringlichkeit)
       var upcoming = DATA.actions.filter(function (a) { return !a.completed; }).slice().sort(function (a, b) {

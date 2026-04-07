@@ -14,10 +14,44 @@ try {
 }
 
 const DB = {
+  _lastFromCache: false,
+
+  _toCache(key, data) {
+    try {
+      localStorage.setItem('auswanderung_cache_' + key, JSON.stringify({
+        data: data,
+        timestamp: Date.now()
+      }));
+    } catch (e) { /* localStorage full, ignore */ }
+  },
+
+  _fromCache(key) {
+    try {
+      var cached = JSON.parse(localStorage.getItem('auswanderung_cache_' + key));
+      if (cached && cached.data) {
+        console.info('Using cached data for ' + key + ' (age: ' + Math.round((Date.now() - cached.timestamp) / 60000) + ' min)');
+        return cached.data;
+      }
+    } catch (e) {}
+    return key === 'stays' || key === 'docs' || key === 'costs' ? [] : {};
+  },
+
+  _getCacheTimestamp(key) {
+    try {
+      var cached = JSON.parse(localStorage.getItem('auswanderung_cache_' + key));
+      if (cached && cached.timestamp) return cached.timestamp;
+    } catch (e) {}
+    return null;
+  },
+
+  isUsingCache() {
+    return this._lastFromCache;
+  },
+
   // --- Action States (checkboxes) ---
 
   async loadCompleted() {
-    if (!sb) return {};
+    if (!sb) { this._lastFromCache = true; return this._fromCache('completed'); }
     try {
       const { data, error } = await sb
         .from('action_states')
@@ -25,8 +59,14 @@ const DB = {
       if (error) throw error;
       const map = {};
       (data || []).forEach(r => { map[r.id] = r.completed; });
+      this._toCache('completed', map);
+      this._lastFromCache = false;
       return map;
-    } catch (e) { console.warn('loadCompleted:', e); return {}; }
+    } catch (e) {
+      console.warn('loadCompleted online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('completed');
+    }
   },
 
   async saveCompleted(id, completed) {
@@ -42,7 +82,7 @@ const DB = {
   // --- Document Notes ---
 
   async loadDocNotes() {
-    if (!sb) return {};
+    if (!sb) { this._lastFromCache = true; return this._fromCache('docnotes'); }
     try {
       const { data, error } = await sb
         .from('doc_notes')
@@ -50,8 +90,14 @@ const DB = {
       if (error) throw error;
       const map = {};
       (data || []).forEach(r => { map[r.id] = r.note; });
+      this._toCache('docnotes', map);
+      this._lastFromCache = false;
       return map;
-    } catch (e) { console.warn('loadDocNotes:', e); return {}; }
+    } catch (e) {
+      console.warn('loadDocNotes online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('docnotes');
+    }
   },
 
   async saveDocNote(id, note) {
@@ -69,14 +115,14 @@ const DB = {
   // --- Documents (metadata + storage) ---
 
   async loadDocs() {
-    if (!sb) return [];
+    if (!sb) { this._lastFromCache = true; return this._fromCache('docs'); }
     try {
       const { data, error } = await sb
         .from('documents')
         .select('*')
         .order('uploaded_at', { ascending: false });
       if (error) throw error;
-      return (data || []).map(d => ({
+      var result = (data || []).map(d => ({
         id: d.id,
         name: d.name,
         category: d.category,
@@ -86,7 +132,14 @@ const DB = {
         uploaded: d.uploaded_at,
         url: `${SUPABASE_URL}/storage/v1/object/public/documents/${d.storage_path}`
       }));
-    } catch (e) { console.warn('loadDocs:', e); return []; }
+      this._toCache('docs', result);
+      this._lastFromCache = false;
+      return result;
+    } catch (e) {
+      console.warn('loadDocs online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('docs');
+    }
   },
 
   async uploadDoc(file, name, category) {
@@ -129,7 +182,7 @@ const DB = {
   // --- Milestone Notes ---
 
   async loadMilestoneNotes() {
-    if (!sb) return {};
+    if (!sb) { this._lastFromCache = true; return this._fromCache('milestonenotes'); }
     try {
       const { data, error } = await sb
         .from('milestone_notes')
@@ -137,8 +190,14 @@ const DB = {
       if (error) throw error;
       const map = {};
       (data || []).forEach(r => { map[r.id] = r.note; });
+      this._toCache('milestonenotes', map);
+      this._lastFromCache = false;
       return map;
-    } catch (e) { console.warn('loadMilestoneNotes:', e); return {}; }
+    } catch (e) {
+      console.warn('loadMilestoneNotes online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('milestonenotes');
+    }
   },
 
   async saveMilestoneNote(id, milestoneTitle, note) {
@@ -156,15 +215,21 @@ const DB = {
   // --- Stay Log ---
 
   async loadStays() {
-    if (!sb) return [];
+    if (!sb) { this._lastFromCache = true; return this._fromCache('stays'); }
     try {
       const { data, error } = await sb
         .from('stay_log')
         .select('*')
         .order('entry_date', { ascending: false });
       if (error) throw error;
+      this._toCache('stays', data || []);
+      this._lastFromCache = false;
       return data || [];
-    } catch (e) { console.warn('loadStays:', e); return []; }
+    } catch (e) {
+      console.warn('loadStays online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('stays');
+    }
   },
 
   async saveStay(stay) {
@@ -198,14 +263,14 @@ const DB = {
   // --- Costs ---
 
   async loadCosts() {
-    if (!sb) return [];
+    if (!sb) { this._lastFromCache = true; return this._fromCache('costs'); }
     try {
       const { data, error } = await sb
         .from('costs')
         .select('*')
         .order('created_at', { ascending: true });
       if (error) throw error;
-      return (data || []).map(d => ({
+      var result = (data || []).map(d => ({
         id: d.id,
         firm: d.firm,
         label: d.label,
@@ -213,7 +278,14 @@ const DB = {
         interval: d.interval,
         notes: d.notes
       }));
-    } catch (e) { console.warn('loadCosts:', e); return []; }
+      this._toCache('costs', result);
+      this._lastFromCache = false;
+      return result;
+    } catch (e) {
+      console.warn('loadCosts online failed, using cache:', e);
+      this._lastFromCache = true;
+      return this._fromCache('costs');
+    }
   },
 
   async saveCost(cost) {

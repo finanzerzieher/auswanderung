@@ -2271,3 +2271,89 @@ body {
   color: var(--passport);
   margin-top: var(--sp-2);
 }
+
+/* =============================================
+   DEUTSCHLAND-BESUCH-RECHNER
+   ============================================= */
+
+.de-visit-block {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-5) var(--sp-6);
+  margin-bottom: var(--sp-4);
+  text-align: center;
+  border-left: 4px solid var(--green);
+}
+
+.de-visit-block.de-visit-green {
+  border-left-color: var(--green);
+}
+
+.de-visit-block.de-visit-yellow {
+  border-left-color: var(--amber);
+}
+
+.de-visit-block.de-visit-red {
+  border-left-color: var(--burgundy);
+}
+
+.de-visit-block.de-visit-zero {
+  border-left-color: var(--burgundy);
+  background: var(--burgundy-subtle);
+}
+
+.de-visit-number {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.de-visit-green .de-visit-number {
+  color: var(--green);
+}
+
+.de-visit-yellow .de-visit-number {
+  color: var(--amber);
+}
+
+.de-visit-red .de-visit-number {
+  color: var(--burgundy);
+}
+
+.de-visit-zero .de-visit-number {
+  color: var(--burgundy);
+}
+
+.de-visit-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  margin-top: var(--sp-1);
+}
+
+.de-visit-details {
+  font-size: 12px;
+  color: var(--ink-tertiary);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =============================================
+   OFFLINE-BANNER
+   ============================================= */
+
+.offline-banner {
+  background: var(--amber-subtle);
+  color: var(--amber-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--sp-4);
+  text-align: center;
+}
