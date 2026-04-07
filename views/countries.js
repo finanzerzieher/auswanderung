@@ -79,12 +79,18 @@ window.Views.countries = (function () {
       if (remaining < 0) remaining = 0;
       var isSchengen = c.schengen || window.Schengen.isSchengen(c.name);
       var schengenBadge = isSchengen ? '<span class="schengen-badge">Schengen</span>' : '';
+      // COMP-05: 183-Tage-Warnung
+      var taxWarning = '';
+      if (daysUsed > 150) {
+        taxWarning = '<div class="tax-residence-warning">Achtung: 183-Tage-Schwelle naht \u2014 m\u00f6gliche Steuerresidenz</div>';
+      }
       return '\
         <div class="country-card">\
           <div class="country-header">\
             <div class="country-name">' + c.name + ' ' + schengenBadge + '</div>\
             <div class="country-flag">' + c.flag + '</div>\
           </div>\
+          ' + taxWarning + '\
           <div class="country-stay">\
             <div class="country-stay-bar">\
               <div class="country-stay-fill ' + fillClass + '" style="width: ' + pct + '%"></div>\

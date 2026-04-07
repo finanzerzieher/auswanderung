@@ -1344,6 +1344,215 @@ body {
 }
 
 /* =============================================
+   COMP-01: DEADLINE-WARNUNGEN
+   ============================================= */
+
+.action-item.urgent {
+  border-left: 3px solid var(--burgundy);
+  background: var(--burgundy-subtle);
+}
+
+.action-item.overdue {
+  border-left: 3px solid var(--burgundy);
+  background: rgba(122, 46, 58, 0.14);
+  border-color: var(--burgundy);
+}
+
+.action-item.overdue .action-title {
+  color: var(--burgundy);
+}
+
+/* =============================================
+   COMP-03: MILESTONE-NOTIZEN
+   ============================================= */
+
+.milestone-note-section {
+  margin-top: var(--sp-2);
+}
+
+.milestone-note-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-3);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-tertiary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.milestone-note-btn:hover {
+  color: var(--passport);
+  border-color: var(--passport);
+}
+
+.milestone-note-text {
+  font-size: 12px;
+  color: var(--ink-secondary);
+  background: var(--passport-subtle);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--sp-2);
+  line-height: 1.4;
+}
+
+.milestone-note-editor {
+  margin-top: var(--sp-2);
+}
+
+.milestone-note-input {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 13px;
+  font-family: var(--font);
+  border: 1px solid var(--border-emphasis);
+  border-radius: var(--radius-sm);
+  background: var(--surface-overlay);
+  color: var(--ink-primary);
+  outline: none;
+}
+
+.milestone-note-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px var(--passport-ring);
+}
+
+.milestone-note-actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+.milestone-note-save,
+.milestone-note-cancel {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font);
+  padding: 2px var(--sp-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.milestone-note-save {
+  background: var(--passport);
+  color: white;
+  border-color: var(--passport);
+}
+
+.milestone-note-save:hover {
+  background: var(--passport-light);
+}
+
+.milestone-note-cancel {
+  background: var(--surface-raised);
+  color: var(--ink-secondary);
+}
+
+.milestone-note-cancel:hover {
+  background: var(--surface-inset);
+}
+
+/* =============================================
+   COMP-04: COMPLIANCE-SEKTION
+   ============================================= */
+
+#complianceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.compliance-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.compliance-item.compliance-soon {
+  border-left: 3px solid var(--amber);
+  background: var(--amber-subtle);
+}
+
+.compliance-item.compliance-overdue {
+  border-left: 3px solid var(--burgundy);
+  background: var(--burgundy-subtle);
+}
+
+.compliance-firm {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-tertiary);
+  min-width: 120px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.compliance-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.compliance-task {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-primary);
+}
+
+.compliance-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-1);
+}
+
+.compliance-date {
+  font-size: 12px;
+  color: var(--ink-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.compliance-interval {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 1px var(--sp-2);
+  border-radius: 3px;
+  background: var(--passport-subtle);
+  color: var(--passport);
+}
+
+.compliance-note {
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-style: italic;
+  margin-top: var(--sp-1);
+}
+
+/* =============================================
+   COMP-05: 183-TAGE-STEUERRESIDENZ-WARNUNG
+   ============================================= */
+
+.tax-residence-warning {
+  padding: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-3);
+  background: var(--burgundy-subtle);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-sm);
+  color: var(--burgundy);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 

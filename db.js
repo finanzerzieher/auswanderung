@@ -126,6 +126,33 @@ const DB = {
     } catch (e) { console.warn('deleteDoc:', e); }
   },
 
+  // --- Milestone Notes ---
+
+  async loadMilestoneNotes() {
+    if (!sb) return {};
+    try {
+      const { data, error } = await sb
+        .from('milestone_notes')
+        .select('id, milestone_title, note');
+      if (error) throw error;
+      const map = {};
+      (data || []).forEach(r => { map[r.id] = r.note; });
+      return map;
+    } catch (e) { console.warn('loadMilestoneNotes:', e); return {}; }
+  },
+
+  async saveMilestoneNote(id, milestoneTitle, note) {
+    if (!sb) return;
+    try {
+      if (!note) {
+        await sb.from('milestone_notes').delete().eq('id', id);
+      } else {
+        await sb.from('milestone_notes')
+          .upsert({ id, milestone_title: milestoneTitle, note, updated_at: new Date().toISOString() });
+      }
+    } catch (e) { console.warn('saveMilestoneNote:', e); }
+  },
+
   // --- Stay Log ---
 
   async loadStays() {

@@ -172,7 +172,8 @@ const DATA = {
       tag: 'warning',
       tagText: 'Bald fällig',
       completed: false,
-      id: 'kv'
+      id: 'kv',
+      phase: 'prep'
     },
     {
       title: 'EU-Postbox eingerichtet — CAYA Postbox 1010050, 96035 Bamberg',
@@ -180,7 +181,8 @@ const DATA = {
       tag: 'info',
       tagText: 'Erledigt',
       completed: true,
-      id: 'postbox'
+      id: 'postbox',
+      phase: 'prep'
     },
     {
       title: 'Caya: Alternativ-Adresse ohne "Postbox" im Namen anfragen',
@@ -189,7 +191,8 @@ const DATA = {
       tagText: 'Bald fällig',
       dependency: 'Caya zeigt das nicht automatisch — aktiv anfragen!',
       completed: false,
-      id: 'caya-alt'
+      id: 'caya-alt',
+      phase: 'prep'
     },
     {
       title: 'Compliance-Adresse für LLC organisieren (MailboxNow)',
@@ -197,7 +200,8 @@ const DATA = {
       tag: 'info',
       tagText: 'Vorbereitung',
       completed: false,
-      id: 'compliance-addr'
+      id: 'compliance-addr',
+      phase: 'prep'
     },
     {
       title: 'Erweiterte beschränkte Steuerpflicht prüfen',
@@ -206,7 +210,8 @@ const DATA = {
       tagText: 'Vor Auswanderung!',
       dependency: 'Muss VOR Abmeldung geklärt sein',
       completed: false,
-      id: 'erw-steuerpflicht'
+      id: 'erw-steuerpflicht',
+      phase: 'prep'
     },
     {
       title: 'Flug nach Bangkok buchen',
@@ -214,7 +219,8 @@ const DATA = {
       tag: 'info',
       tagText: 'Planung',
       completed: false,
-      id: 'flug'
+      id: 'flug',
+      phase: 'travel'
     },
     {
       title: 'Abmeldebestätigung mehrfach sichern (digital + physisch)',
@@ -223,7 +229,8 @@ const DATA = {
       tagText: 'Kritisch',
       dependency: 'Nach Abmeldung am Bürgerbüro',
       completed: false,
-      id: 'abmelde-copy'
+      id: 'abmelde-copy',
+      phase: 'deregister'
     },
     {
       title: 'Geburtsurkunde mit Apostille — erledigt ✓',
@@ -231,7 +238,8 @@ const DATA = {
       tag: 'info',
       tagText: 'Erledigt',
       completed: true,
-      id: 'geburtsurkunde'
+      id: 'geburtsurkunde',
+      phase: 'prep'
     },
     {
       title: 'Internationaler Führerschein — erledigt ✓',
@@ -239,7 +247,8 @@ const DATA = {
       tag: 'info',
       tagText: 'Erledigt',
       completed: true,
-      id: 'fuehrerschein'
+      id: 'fuehrerschein',
+      phase: 'prep'
     }
   ],
 
@@ -366,6 +375,15 @@ const DATA = {
     { id: 'deregister', label: 'Abmeldung', date: '2026-06-02', detail: '' },
     { id: 'llc', label: 'LLC beauftragen', date: '2026-06-03', detail: '1 Tag nach Abmeldung' },
     { id: 'departure', label: 'Abflug Bangkok', date: '2026-06-06', detail: '' }
+  ],
+
+  // Compliance-Pflichten
+  compliance: [
+    { firm: 'LLC', task: 'Wyoming Annual Report', dueMonth: 1, dueDay: 1, interval: 'jährlich', note: 'Über Registered Agent' },
+    { firm: 'Einzelunternehmen', task: 'IHK-Beitrag', dueMonth: 3, dueDay: 31, interval: 'jährlich', note: '' },
+    { firm: 'Einzelunternehmen', task: 'Berufshaftpflicht-Verlängerung', dueMonth: null, dueDay: null, interval: 'jährlich', note: 'Genaues Datum prüfen' },
+    { firm: 'LLC', task: 'Wise Business Statement', dueMonth: null, dueDay: null, interval: 'monatlich', note: '' },
+    { firm: 'Einzelunternehmen', task: 'Steuererklärung', dueMonth: 7, dueDay: 31, interval: 'jährlich', note: 'Nuller-Erklärung' }
   ],
 
   // Firmenstruktur

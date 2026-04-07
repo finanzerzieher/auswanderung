@@ -7,6 +7,47 @@ window.Views.cmd = (function () {
   var TODAY = new Date();
   TODAY.setHours(0, 0, 0, 0);
 
+  function calcPhaseProgress(phaseId) {
+    var phaseActions = DATA.actions.filter(function (a) { return a.phase === phaseId; });
+    if (phaseActions.length === 0) return 0;
+    var completed = phaseActions.filter(function (a) { return a.completed; }).length;
+    return completed / phaseActions.length;
+  }
+
+  function getNextComplianceDates() {
+    var now = new Date();
+    var currentYear = now.getFullYear();
+    var currentMonth = now.getMonth() + 1;
+    var currentDay = now.getDate();
+
+    return DATA.compliance.map(function (c) {
+      var item = { firm: c.firm, task: c.task, interval: c.interval, note: c.note, dueDate: null, dueDateStr: '' };
+
+      if (c.dueMonth !== null && c.dueDay !== null) {
+        // Festes Datum — nächstes Vorkommen berechnen
+        var year = currentYear;
+        var candidate = new Date(year, c.dueMonth - 1, c.dueDay);
+        candidate.setHours(0, 0, 0, 0);
+        if (candidate < now) {
+          year++;
+          candidate = new Date(year, c.dueMonth - 1, c.dueDay);
+          candidate.setHours(0, 0, 0, 0);
+        }
+        item.dueDate = candidate;
+        item.dueDateStr = DateUtils.formatDate(
+          candidate.getFullYear() + '-' +
+          String(candidate.getMonth() + 1).padStart(2, '0') + '-' +
+          String(candidate.getDate()).padStart(2, '0')
+        );
+      } else {
+        // Kein festes Datum
+        item.dueDate = null;
+        item.dueDateStr = 'Datum offen';
+      }
+      return item;
+    });
+  }
+
   function render() {
     var parseLocalDate = DateUtils.parseLocalDate;
     var daysBetween = DateUtils.daysBetween;
@@ -58,6 +99,7 @@ window.Views.cmd = (function () {
         </div>';
     }).join('');
 
+    // COMP-01: Deadline-Warnungen berechnen
     var actionList = document.getElementById('nextActions');
     var sortedActions = DATA.actions.slice().sort(function (a, b) {
       if (a.completed !== b.completed) return a.completed ? 1 : -1;
@@ -67,14 +109,26 @@ window.Views.cmd = (function () {
     });
 
     actionList.innerHTML = sortedActions.map(function (action) {
+      var urgentClass = '';
+      if (!action.completed && action.date) {
+        var actionDate = parseLocalDate(action.date);
+        var daysUntil = daysBetween(TODAY, actionDate);
+        if (daysUntil < 0) {
+          urgentClass = ' overdue';
+        } else if (daysUntil < 7) {
+          urgentClass = ' urgent';
+        }
+      }
       return '\
-        <div class="action-item ' + (action.completed ? 'completed' : '') + '" data-id="' + action.id + '">\
+        <div class="action-item ' + (action.completed ? 'completed' : '') + urgentClass + '" data-id="' + action.id + '">\
           <div class="action-check ' + (action.completed ? 'checked' : '') + '" data-action-id="' + action.id + '"></div>\
           <div class="action-body">\
             <div class="action-title">' + action.title + '</div>\
             <div class="action-meta">\
               ' + (action.date ? '<span class="action-date">' + formatDate(action.date) + '</span>' : '') + '\
               ' + (action.tag ? '<span class="action-tag ' + action.tag + '">' + action.tagText + '</span>' : '') + '\
+              ' + (urgentClass === ' overdue' ? '<span class="action-tag critical">\u00dcberf\u00e4llig</span>' : '') + '\
+              ' + (urgentClass === ' urgent' ? '<span class="action-tag critical">Dringend</span>' : '') + '\
             </div>\
             ' + (action.dependency ? '<div class="action-dependency">' + action.dependency + '</div>' : '') + '\
           </div>\
@@ -110,10 +164,10 @@ window.Views.cmd = (function () {
         </div>';
     }).join('');
 
-    // Progress
+    // COMP-02: Auto-Progress aus Actions berechnen
     var progressEl = document.getElementById('progressOverview');
     progressEl.innerHTML = DATA.phases.map(function (phase) {
-      var pct = Math.round(phase.progress * 100);
+      var pct = Math.round(calcPhaseProgress(phase.id) * 100);
       return '\
         <div class="progress-row">\
           <div class="progress-label">' + phase.name + '</div>\
@@ -121,6 +175,61 @@ window.Views.cmd = (function () {
             <div class="progress-fill ' + (pct === 100 ? 'complete' : '') + '" style="width: ' + pct + '%"></div>\
           </div>\
           <div class="progress-value">' + pct + '%</div>\
+        </div>';
+    }).join('');
+
+    // COMP-04: Compliance-Sektion rendern
+    renderCompliance();
+  }
+
+  function renderCompliance() {
+    var container = document.getElementById('complianceSection');
+    if (!container) {
+      // Sektion erstellen
+      var viewEl = document.getElementById('view-command-center');
+      var section = document.createElement('section');
+      section.id = 'complianceSection';
+      section.className = 'section';
+      section.innerHTML = '<h2 class="section-title">Compliance-Pflichten</h2><div id="complianceList"></div>';
+      viewEl.appendChild(section);
+    }
+
+    var items = getNextComplianceDates();
+    // Sortieren: Einträge mit Datum zuerst (nach Datum), dann ohne Datum
+    items.sort(function (a, b) {
+      if (a.dueDate && b.dueDate) return a.dueDate - b.dueDate;
+      if (a.dueDate && !b.dueDate) return -1;
+      if (!a.dueDate && b.dueDate) return 1;
+      return 0;
+    });
+
+    var list = document.getElementById('complianceList');
+    list.innerHTML = items.map(function (item) {
+      var daysUntil = '';
+      var urgencyClass = '';
+      if (item.dueDate) {
+        var days = DateUtils.daysBetween(TODAY, item.dueDate);
+        if (days < 0) {
+          daysUntil = '\u00fcberf\u00e4llig';
+          urgencyClass = ' compliance-overdue';
+        } else if (days < 30) {
+          daysUntil = 'in ' + days + ' Tagen';
+          urgencyClass = ' compliance-soon';
+        } else {
+          daysUntil = 'in ' + days + ' Tagen';
+        }
+      }
+      return '\
+        <div class="compliance-item' + urgencyClass + '">\
+          <div class="compliance-firm">' + item.firm + '</div>\
+          <div class="compliance-body">\
+            <div class="compliance-task">' + item.task + '</div>\
+            <div class="compliance-meta">\
+              <span class="compliance-date">' + item.dueDateStr + (daysUntil ? ' (' + daysUntil + ')' : '') + '</span>\
+              <span class="compliance-interval">' + item.interval + '</span>\
+            </div>\
+            ' + (item.note ? '<div class="compliance-note">' + item.note + '</div>' : '') + '\
+          </div>\
         </div>';
     }).join('');
   }
