@@ -283,7 +283,7 @@
   const REQUIRED_DOCS = [
     { id: 'reisepass', name: 'Reisepass', keywords: ['reisepass', 'passport'], note: 'Gültig bis?' },
     { id: 'perso', name: 'Personalausweis', keywords: ['personalausweis', 'ausweis', 'perso'], note: 'Gültig bis 2034' },
-    { id: 'fuehrerschein', name: 'Internationaler Führerschein', keywords: ['führerschein', 'fuehrerschein', 'driving'], note: 'vorhanden' },
+    { id: 'fuehrerschein', name: 'Internationaler Führerschein', keywords: ['führerschein', 'fuehrerschein', 'führerschein', 'driving', 'license', 'international'], note: 'vorhanden' },
     { id: 'geburtsurkunde', name: 'Geburtsurkunde + Apostille', keywords: ['geburtsurkunde', 'apostille', 'birth'], note: 'Übersetzt und beglaubigt' },
     { id: 'abmeldung', name: 'Abmeldebestätigung', keywords: ['abmelde', 'deregistration'], note: 'Ab 02.06. — mehrfach sichern!' },
     { id: 'gewerbe', name: 'Gewerbeschein', keywords: ['gewerbeschein', 'gewerbe'], note: 'Einzelunternehmen' },
@@ -468,6 +468,11 @@
         <select id="docDialogCategory">
           ${DOC_CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
         </select>
+        <label for="docRequiredMatch">Pflichtdokument zuordnen</label>
+        <select id="docRequiredMatch">
+          <option value="">— Keins / Automatisch —</option>
+          ${REQUIRED_DOCS.map(r => `<option value="${r.id}">${r.name}</option>`).join('')}
+        </select>
         <div class="doc-dialog-actions">
           <button class="doc-btn-cancel" id="docDialogCancel">Abbrechen</button>
           <button class="doc-btn-save" id="docDialogSave">Speichern</button>
@@ -499,10 +504,28 @@
       overlay.remove();
     });
 
+    // Auto-select required doc match based on filename
+    const lowerName = nameWithoutExt.toLowerCase();
+    for (const req of REQUIRED_DOCS) {
+      if (req.keywords.some(kw => lowerName.includes(kw))) {
+        overlay.querySelector('#docRequiredMatch').value = req.id;
+        break;
+      }
+    }
+
     const saveBtn = overlay.querySelector('#docDialogSave');
     saveBtn.addEventListener('click', async () => {
-      const name = overlay.querySelector('#docDialogName').value.trim() || nameWithoutExt;
+      let name = overlay.querySelector('#docDialogName').value.trim() || nameWithoutExt;
       const category = overlay.querySelector('#docDialogCategory').value;
+      const requiredMatch = overlay.querySelector('#docRequiredMatch').value;
+
+      // If a required doc was selected, ensure the name contains a matching keyword
+      if (requiredMatch) {
+        const req = REQUIRED_DOCS.find(r => r.id === requiredMatch);
+        if (req && !req.keywords.some(kw => name.toLowerCase().includes(kw))) {
+          name = req.name + ' — ' + name;
+        }
+      }
 
       saveBtn.textContent = 'Wird hochgeladen...';
       saveBtn.disabled = true;
