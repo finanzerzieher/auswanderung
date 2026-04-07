@@ -79,22 +79,6 @@ const DATA = {
     },
     {
       date: '2026-06-02',
-      title: 'Private Versicherungen k\u00fcndigen',
-      desc: 'Sonderk\u00fcndigungsrecht durch Abmeldung: Deutsche KV, Haftpflicht, Hausrat sofort k\u00fcndbar. Berufshaftpflicht BEHALTEN!',
-      status: 'upcoming',
-      phase: 'deregister',
-      deps: 'Internationale KV muss vorher abgeschlossen sein. Sonderk\u00fcndigungsrecht greift ab Abmeldung.'
-    },
-    {
-      date: '2026-06-20',
-      title: 'Compliance-Adresse f\u00fcr LLC einrichten',
-      desc: 'MailboxNow o.\u00e4. \u2014 echte Stra\u00dfenadresse auf die LLC, Stadt wo du NIE gemeldet warst. Erst m\u00f6glich wenn LLC gegr\u00fcndet ist.',
-      status: 'upcoming',
-      phase: 'llc',
-      deps: 'LLC muss gegr\u00fcndet sein'
-    },
-    {
-      date: '2026-06-02',
       title: 'Wohnsitz abmelden',
       desc: 'Bürgerbüro Dortmund — "Längere Auslandsreise Südostasien"',
       status: 'upcoming',
@@ -114,6 +98,14 @@ const DATA = {
       status: 'upcoming',
       phase: 'deregister',
       deps: 'Am Tag der Abmeldung'
+    },
+    {
+      date: '2026-06-02',
+      title: 'Private Versicherungen k\u00fcndigen',
+      desc: 'Sonderk\u00fcndigungsrecht durch Abmeldung: Deutsche KV, Haftpflicht, Hausrat sofort k\u00fcndbar. Berufshaftpflicht BEHALTEN!',
+      status: 'upcoming',
+      phase: 'deregister',
+      deps: 'Internationale KV muss vorher abgeschlossen sein. Sonderk\u00fcndigungsrecht greift ab Abmeldung.'
     },
     {
       date: '2026-06-03',
@@ -155,6 +147,14 @@ const DATA = {
       status: 'upcoming',
       phase: 'llc',
       deps: 'LLC muss gegr\u00fcndet sein'
+    },
+    {
+      date: '2026-06-20',
+      title: 'Compliance-Adresse f\u00fcr LLC einrichten',
+      desc: 'MailboxNow o.\u00e4. \u2014 echte Stra\u00dfenadresse auf die LLC, Stadt wo du NIE gemeldet warst. Erst m\u00f6glich wenn LLC gegr\u00fcndet ist.',
+      status: 'upcoming',
+      phase: 'llc',
+      deps: 'LLC + DBA m\u00fcssen vorliegen'
     },
     {
       date: '2026-07-01',

@@ -53,7 +53,9 @@ window.Views.timeline = (function () {
     // 2. Meilensteine (Timeline)
     html += '<section class="section"><h2 class="section-title">Meilensteine</h2>';
     html += '<div class="timeline" id="timelineMilestones">';
-    DATA.milestones.forEach(function (m) {
+    DATA.milestones.slice().sort(function (a, b) {
+      return new Date(a.date) - new Date(b.date);
+    }).forEach(function (m) {
       var id = milestoneId(m);
       var dotClass = m.status === 'completed' ? 'completed' :
                      m.status === 'active' ? 'active' : 'upcoming';
