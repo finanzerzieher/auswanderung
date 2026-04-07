@@ -32,10 +32,11 @@ const DB = {
   async saveCompleted(id, completed) {
     if (!sb) return;
     try {
-      await sb
+      const { error } = await sb
         .from('action_states')
         .upsert({ id, completed, updated_at: new Date().toISOString() });
-    } catch (e) { console.warn('saveCompleted:', e); }
+      if (error) throw error;
+    } catch (e) { console.warn('saveCompleted:', e); throw e; }
   },
 
   // --- Document Notes ---

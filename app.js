@@ -13,13 +13,23 @@
     return Math.ceil((b - a) / msPerDay);
   }
 
+  function parseLocalDate(dateStr) {
+    // Fix: date-only strings like '2026-06-02' are parsed as UTC by new Date(),
+    // which shifts the date in timezones east of UTC (e.g. Bangkok UTC+7).
+    // Append T00:00:00 to force local-time interpretation.
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return new Date(dateStr + 'T00:00:00');
+    }
+    return new Date(dateStr);
+  }
+
   function formatDate(dateStr) {
-    const d = new Date(dateStr);
+    const d = parseLocalDate(dateStr);
     return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
   function formatDateLong(dateStr) {
-    const d = new Date(dateStr);
+    const d = parseLocalDate(dateStr);
     return d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
@@ -63,9 +73,9 @@
   // --- Command Center ---
 
   function renderCommandCenter() {
-    const departureDate = new Date('2026-06-06');
-    const deregisterDate = new Date('2026-06-02');
-    const llcDate = new Date('2026-06-03');
+    const departureDate = parseLocalDate('2026-06-06');
+    const deregisterDate = parseLocalDate('2026-06-02');
+    const llcDate = parseLocalDate('2026-06-03');
     const daysToDeparture = daysBetween(TODAY, departureDate);
     const daysToDeregister = daysBetween(TODAY, deregisterDate);
     const daysToLLC = daysBetween(TODAY, llcDate);
@@ -118,7 +128,7 @@
       if (a.completed !== b.completed) return a.completed ? 1 : -1;
       if (!a.date) return 1;
       if (!b.date) return -1;
-      return new Date(a.date) - new Date(b.date);
+      return parseLocalDate(a.date) - parseLocalDate(b.date);
     });
 
     actionList.innerHTML = sortedActions.map(action => `
@@ -135,15 +145,20 @@
       </div>
     `).join('');
 
-    // Toggle completed — save to Supabase
+    // Toggle completed — optimistic UI update, then save to Supabase
     actionList.querySelectorAll('.action-check').forEach(check => {
-      check.addEventListener('click', async () => {
+      check.addEventListener('click', () => {
         const id = check.dataset.actionId;
         const action = DATA.actions.find(a => a.id === id);
         if (action) {
           action.completed = !action.completed;
-          await DB.saveCompleted(id, action.completed);
           renderCommandCenter();
+          // Async save — revert on error
+          DB.saveCompleted(id, action.completed).catch(() => {
+            action.completed = !action.completed;
+            renderCommandCenter();
+            alert('Speichern fehlgeschlagen. Änderung wurde rückgängig gemacht.');
+          });
         }
       });
     });
@@ -395,6 +410,7 @@
     container.querySelectorAll('.doc-card-delete').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
+        if (!confirm('Dokument wirklich löschen?')) return;
         const id = btn.dataset.deleteId;
         const storagePath = btn.dataset.storagePath;
         await DB.deleteDoc(id, storagePath);
@@ -530,7 +546,22 @@
       saveBtn.textContent = 'Wird hochgeladen...';
       saveBtn.disabled = true;
 
-      await DB.uploadDoc(file, name, category);
+      const result = await DB.uploadDoc(file, name, category);
+      if (result === null) {
+        // Upload fehlgeschlagen — Fehlermeldung anzeigen
+        saveBtn.textContent = 'Speichern';
+        saveBtn.disabled = false;
+        let errorMsg = overlay.querySelector('.doc-dialog-error');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'doc-dialog-error';
+          errorMsg.style.cssText = 'color: var(--burgundy); background: var(--burgundy-subtle); padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-top: 8px;';
+          overlay.querySelector('.doc-dialog-actions').before(errorMsg);
+        }
+        errorMsg.innerHTML = 'Upload fehlgeschlagen. <button class="doc-btn-retry" style="background:none;border:none;color:var(--passport);cursor:pointer;font-weight:600;font-size:13px;text-decoration:underline;padding:0;margin-left:4px;">Erneut versuchen</button>';
+        errorMsg.querySelector('.doc-btn-retry').addEventListener('click', () => saveBtn.click());
+        return;
+      }
       overlay.remove();
       showUploadDialog(index + 1);
     });

@@ -1,0 +1,18 @@
+name: Supabase Keep-Alive
+
+on:
+  schedule:
+    # Alle 5 Tage um 06:00 UTC — verhindert Supabase-Pause nach 7 Tagen Inaktivität
+    - cron: '0 6 */5 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase DB
+        run: |
+          curl -sf -o /dev/null \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjdWRuemxncHFid3Nobm1tbGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1ODQxNzIsImV4cCI6MjA5MTE2MDE3Mn0.MTrI95U9GdjdTo7hdXiK9KLY95tMhFKWV36TdmxzkrQ" \
+            "https://ucudnzlgpqbwshnmmldy.supabase.co/rest/v1/action_states?select=id&limit=1"
+          echo "Supabase ping successful"
