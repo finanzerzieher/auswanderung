@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auswanderung — Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <nav class="nav">
+      <div class="nav-brand">
+        <span class="nav-icon">✦</span>
+        <span class="nav-title">Auswanderung</span>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="nav-link active" data-view="command-center">Übersicht</a>
+        <a href="#" class="nav-link" data-view="timeline">Zeitstrahl</a>
+        <a href="#" class="nav-link" data-view="countries">Länder & Visa</a>
+        <a href="#" class="nav-link" data-view="structure">Firmenstruktur</a>
+        <a href="#" class="nav-link" data-view="documents">Dokumente</a>
+      </div>
+      <div class="nav-date" id="currentDate"></div>
+    </nav>
+
+    <!-- COMMAND CENTER -->
+    <main class="view active" id="view-command-center">
+      <header class="view-header">
+        <div>
+          <h1 class="view-title">Was steht jetzt an?</h1>
+          <p class="view-subtitle" id="daysUntilDeparture"></p>
+        </div>
+        <div class="phase-badge" id="currentPhaseBadge"></div>
+      </header>
+
+      <!-- Countdown-Leiste -->
+      <section class="countdown-bar" id="countdownBar"></section>
+
+      <!-- Nächste kritische Schritte -->
+      <section class="section">
+        <h2 class="section-title">Nächste Schritte</h2>
+        <div class="action-list" id="nextActions"></div>
+      </section>
+
+      <!-- Offene Punkte -->
+      <section class="section">
+        <h2 class="section-title">Offene Punkte</h2>
+        <div class="open-items" id="openItems"></div>
+      </section>
+
+      <!-- Fortschritt -->
+      <section class="section">
+        <h2 class="section-title">Fortschritt</h2>
+        <div class="progress-overview" id="progressOverview"></div>
+      </section>
+    </main>
+
+    <!-- ZEITSTRAHL -->
+    <main class="view" id="view-timeline">
+      <header class="view-header">
+        <h1 class="view-title">Zeitstrahl</h1>
+        <p class="view-subtitle">Alle Meilensteine und Abhängigkeiten</p>
+      </header>
+      <div class="timeline" id="timeline"></div>
+    </main>
+
+    <!-- LÄNDER & VISA -->
+    <main class="view" id="view-countries">
+      <header class="view-header">
+        <h1 class="view-title">Länder & Visa</h1>
+        <p class="view-subtitle">Aufenthaltsdauer, Regeln, Countdowns</p>
+      </header>
+      <div class="country-grid" id="countryGrid"></div>
+    </main>
+
+    <!-- FIRMENSTRUKTUR -->
+    <main class="view" id="view-structure">
+      <header class="view-header">
+        <h1 class="view-title">Firmenstruktur</h1>
+        <p class="view-subtitle">Zwei-Firmen-Modell im Überblick</p>
+      </header>
+      <div class="structure-layout" id="structureLayout"></div>
+    </main>
+
+    <!-- DOKUMENTE -->
+    <main class="view" id="view-documents">
+      <header class="view-header">
+        <div>
+          <h1 class="view-title">Dokumente</h1>
+          <p class="view-subtitle">Wichtige Dokumente digitalisiert und griffbereit</p>
+        </div>
+        <label class="doc-upload-btn" for="docFileInput">
+          + Hochladen
+          <input type="file" id="docFileInput" accept="image/*,.pdf" multiple hidden>
+        </label>
+      </header>
+      <div class="doc-categories" id="docCategories"></div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="data.js"></script>
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
