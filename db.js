@@ -193,5 +193,55 @@ const DB = {
         .eq('id', id);
       if (error) throw error;
     } catch (e) { console.warn('deleteStay:', e); throw e; }
+  },
+
+  // --- Costs ---
+
+  async loadCosts() {
+    if (!sb) return [];
+    try {
+      const { data, error } = await sb
+        .from('costs')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return (data || []).map(d => ({
+        id: d.id,
+        firm: d.firm,
+        label: d.label,
+        amount: d.amount,
+        interval: d.interval,
+        notes: d.notes
+      }));
+    } catch (e) { console.warn('loadCosts:', e); return []; }
+  },
+
+  async saveCost(cost) {
+    if (!sb) return;
+    try {
+      const { error } = await sb
+        .from('costs')
+        .upsert({
+          id: cost.id,
+          firm: cost.firm,
+          label: cost.label,
+          amount: cost.amount,
+          interval: cost.interval,
+          notes: cost.notes || null,
+          created_at: new Date().toISOString()
+        });
+      if (error) throw error;
+    } catch (e) { console.warn('saveCost:', e); throw e; }
+  },
+
+  async deleteCost(id) {
+    if (!sb) return;
+    try {
+      const { error } = await sb
+        .from('costs')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    } catch (e) { console.warn('deleteCost:', e); throw e; }
   }
 };

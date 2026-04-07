@@ -45,4 +45,6 @@
   Views.structure.render();
   Views.documents.render();
   Views.documents.initUpload();
+  Views.costs.render();
+  Views.costs.initAddButton();
 })();
