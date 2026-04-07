@@ -305,12 +305,10 @@ const DATA = {
       taxThresholdType: 'calendar_year',
       schengen: true,
       rules: [
-        { label: 'Status', value: 'Abgemeldet seit 02.06.2026' },
-        { label: 'Risiko', value: 'Erw. beschr. Steuerpflicht bis 2036 (\u00a72 AStG)' },
-        { label: 'Empfehlung', value: 'Max. 30 Tage/Jahr, keine Schl\u00fcsselgewalt' },
-        { label: 'Achtung', value: 'Nicht bei Karina melden!' },
-        { label: 'Schl\u00fcsselgewalt', value: 'Zugang zu Wohnung (auch Karina) = Wohnsitz = volle Steuerpflicht!' },
-        { label: 'E.b.S. Ausl\u00f6ser', value: 'Einzelunternehmen k\u00f6nnte als "Unternehmer in DE" gelten \u2192 mit Finanznoma kl\u00e4ren!' }
+        { label: 'Einreise', value: 'Als EU-B\u00fcrger unbegrenzt, aber steuerlich max. 30 Tage pro Jahr empfohlen' },
+        { label: 'Steuer', value: 'Du kannst bis 2036 erweitert steuerpflichtig bleiben \u2014 auch wenn du abgemeldet bist. Deutschland darf dein Welteinkommen besteuern, wenn du in einem Niedrigsteuerland lebst.' },
+        { label: 'Warnung', value: 'Keinen Schl\u00fcssel zu einer Wohnung behalten \u2014 auch nicht bei Karina! Wer Zugang zu einer Wohnung in Deutschland hat, gilt als dort wohnhaft und wird voll steuerpflichtig.' },
+        { label: 'Warnung', value: 'Dein deutsches Einzelunternehmen k\u00f6nnte als Beweis gelten, dass du noch wirtschaftlich in Deutschland aktiv bist. Das muss unbedingt mit Finanznoma gekl\u00e4rt werden.' }
       ]
     },
     {
@@ -322,12 +320,10 @@ const DATA = {
       ruleType: 'per_entry', // Max Tage pro Einreise
       taxThreshold: 180, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa Exemption 60 Tage' },
-        { label: 'Verlängerung', value: '+30 Tage (Immigration Office)' },
-        { label: 'DTV', value: '5 Jahre Multi-Entry, 180 Tage/Aufenthalt' },
-        { label: 'Steuer', value: 'Remittance-basiert seit 2024' },
-        { label: 'Landgrenze', value: 'Max 2 Visa-Exemption-Einreisen/Jahr, nur 30 Tage, NICHT verl\u00e4ngerbar!' },
-        { label: 'Remittance', value: 'Wise-Karte + ATM in Thailand = Remittance = steuerpflichtig bei >180 Tagen!' }
+        { label: 'Einreise', value: 'Ohne Visum 60 Tage, verl\u00e4ngerbar um 30 Tage beim Immigration Office (1.900 Baht)' },
+        { label: 'Langzeit', value: 'DTV-Visum: 5 Jahre g\u00fcltig, 180 Tage pro Einreise. Beste Option f\u00fcr Langzeit.' },
+        { label: 'Warnung', value: '\u00dcber Landgrenzen nur 2 Einreisen pro Jahr erlaubt, jeweils nur 30 Tage und nicht verl\u00e4ngerbar! Am Flughafen kein Limit.' },
+        { label: 'Steuer', value: 'Ab 180 Tagen pro Jahr wirst du steuerpflichtig. Jede Kartenzahlung und ATM-Abhebung in Thailand gilt als steuerpflichtiger Geldtransfer ins Land.' }
       ]
     },
     {
@@ -340,9 +336,9 @@ const DATA = {
       windowDays: 180,
       taxThreshold: 182, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage' },
-        { label: 'DE2 Visa', value: 'Digital Nomad Visa, 1 Jahr' },
-        { label: 'Steuer', value: 'Seit 2022: Remittiertes Auslands-EK besteuert (Befreiung bis 2036 wenn im Herkunftsland besteuert)' }
+        { label: 'Einreise', value: 'Ohne Visum 90 Tage innerhalb von 180 Tagen' },
+        { label: 'Langzeit', value: 'DE Rantau (Digital Nomad Visa): 1 Jahr, ab 24.000 USD Jahreseinkommen' },
+        { label: 'Steuer', value: 'Seit 2022 wird Geld, das aus dem Ausland nach Malaysia \u00fcberwiesen wird, besteuert. Ausnahme bis 2036 wenn im Herkunftsland bereits versteuert.' }
       ]
     },
     {
@@ -354,9 +350,9 @@ const DATA = {
       ruleType: 'continuous', // Max ununterbrochener Aufenthalt
       taxThreshold: 183, taxThresholdType: 'rolling_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 1 Jahr' },
-        { label: 'Steuer', value: 'Territorial — Auslandseinkommen steuerfrei' },
-        { label: 'Vorteil', value: 'Günstig, EU-nah, gute Infrastruktur' }
+        { label: 'Einreise', value: 'Ohne Visum bis zu 1 Jahr am St\u00fcck' },
+        { label: 'Steuer', value: 'Nur Einkommen das in Georgien selbst verdient wird, wird besteuert. Dein Auslandseinkommen bleibt steuerfrei.' },
+        { label: 'Tipp', value: 'G\u00fcnstig, nah an Europa, gute Infrastruktur. Sehr beliebt bei Perpetual Travelers.' }
       ]
     },
     {
@@ -368,9 +364,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'rolling_year',
       rules: [
-        { label: 'Visum', value: 'VoA 30 Tage, verlängerbar auf 60' },
-        { label: 'B211A', value: '60 Tage Business Visa' },
-        { label: 'Steuer', value: 'ACHTUNG: Welteinkommen bei >183 Tagen! (5-35%)' }
+        { label: 'Einreise', value: 'Visa on Arrival: 30 Tage, verl\u00e4ngerbar auf 60 Tage' },
+        { label: 'Langzeit', value: 'Business Visa (B211A/C1): 60 Tage, verl\u00e4ngerbar auf bis zu 180 Tage' },
+        { label: 'Warnung', value: 'Ab 183 Tagen wirst du auf dein gesamtes Welteinkommen besteuert (5-35%)! Nicht nur lokales Einkommen.' }
       ]
     },
     {
@@ -384,11 +380,10 @@ const DATA = {
       windowDays: 180,
       schengen: true,
       rules: [
-        { label: 'Visum', value: 'Schengen 90/180 Tage' },
-        { label: 'EU-B\u00fcrger', value: 'Als EU-B\u00fcrger gilt Schengen 90/180 NICHT \u2014 Freiz\u00fcgigkeit!' },
-        { label: 'Steuer', value: '183 Tage in beliebigem 12-Monats-Zeitraum = steuerpflichtig!' },
-        { label: 'NHR', value: 'NHR beendet seit 2023, Nachfolger nur f\u00fcr bestimmte Berufsgruppen' },
-        { label: 'Achtung', value: 'Z\u00e4hlt gegen Schengen-Kontingent' }
+        { label: 'Einreise', value: 'Als EU-B\u00fcrger unbegrenzt (Freiz\u00fcgigkeit). Die 90/180-Tage-Regel gilt f\u00fcr dich nicht.' },
+        { label: 'Steuer', value: 'Wer in einem beliebigen 12-Monats-Zeitraum 183 Tage in Portugal ist, wird dort steuerpflichtig. Auch ohne festen Wohnsitz!' },
+        { label: 'Hinweis', value: 'Trotzdem z\u00e4hlt jeder Tag gegen dein Schengen-Kontingent bei der Grenzregistrierung.' },
+        { label: 'Hinweis', value: 'Das NHR-Steuermodell wurde Ende 2023 eingestellt.' }
       ]
     },
     {
@@ -401,9 +396,9 @@ const DATA = {
       taxThreshold: 183, taxThresholdType: 'rolling_year',
       windowDays: 180,
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage je 180 Tage' },
-        { label: 'Freelancer', value: 'Freelance Visa ab ~$1.000/Jahr' },
-        { label: 'Steuer', value: '0% Einkommensteuer' }
+        { label: 'Einreise', value: 'Ohne Visum 90 Tage innerhalb von 180 Tagen' },
+        { label: 'Langzeit', value: 'Freelance Visa ab ca. 1.000 USD pro Jahr' },
+        { label: 'Steuer', value: 'Keine Einkommensteuer (0%). Seit 2023 gibt es 9% K\u00f6rperschaftsteuer f\u00fcr Firmen \u00fcber 375.000 AED Gewinn, betrifft aber die Wyoming LLC nicht.' }
       ]
     },
     {
@@ -415,10 +410,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visa-frei', value: '45 Tage ohne Visum (Deutschpass, seit Aug 2023)' },
-        { label: 'Visum', value: 'E-Visa 90 Tage (Single/Multiple Entry)' },
+        { label: 'Einreise', value: 'Ohne Visum 45 Tage (seit August 2023). F\u00fcr l\u00e4nger: E-Visa f\u00fcr 90 Tage (25-50 USD)' },
         { label: 'Verl\u00e4ngerung', value: 'Vor Ort m\u00f6glich' },
-        { label: 'Steuer', value: 'ACHTUNG: Welteinkommen bei >183 Tagen! (5-35%)' }
+        { label: 'Warnung', value: 'Ab 183 Tagen wirst du auf dein gesamtes Welteinkommen besteuert (5-35%)! Nicht nur lokales Einkommen.' }
       ]
     },
     {
@@ -430,10 +424,10 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa on Arrival 30 Tage (~$30)' },
-        { label: 'Verl\u00e4ngerung', value: 'Ordinary Visa (E-Type) verl\u00e4ngerbar' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen' },
-        { label: 'Tipp', value: 'Beliebter Visa-Run-Stopp aus Thailand' }
+        { label: 'Einreise', value: 'Visa bei Ankunft: 30 Tage f\u00fcr ca. 30 USD' },
+        { label: 'Langzeit', value: 'Ordinary Visa (E-Type) vor Ort verl\u00e4ngerbar auf mehrere Monate' },
+        { label: 'Steuer', value: 'Nur Einkommen das in Kambodscha verdient wird, wird besteuert.' },
+        { label: 'Tipp', value: 'Klassischer Stopp f\u00fcr Visa-Runs aus Thailand' }
       ]
     },
     {
@@ -445,9 +439,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa on Arrival 30 Tage' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen' },
-        { label: 'Tipp', value: 'Klassischer Visa-Run aus Thailand (Nong Khai/Vientiane)' }
+        { label: 'Einreise', value: 'Visa bei Ankunft: 30 Tage f\u00fcr 30-40 USD. Verl\u00e4ngerbar um bis zu 60 Tage.' },
+        { label: 'Steuer', value: 'Nur Einkommen das in Laos verdient wird, wird besteuert.' },
+        { label: 'Tipp', value: 'Klassischer Visa-Run aus Thailand \u00fcber Nong Khai oder Vientiane' }
       ]
     },
     {
@@ -459,9 +453,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 0, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
-        { label: 'Verl\u00e4ngerung', value: 'Verl\u00e4ngerung auf 180 Tage m\u00f6glich (bilaterales DE-JP Abkommen)' },
-        { label: 'Steuer', value: 'Domizil-basiert (kein fester Tagesschwellwert). Non-perm. Resident: Japan-EK + remittiertes Ausland-EK' }
+        { label: 'Einreise', value: 'Ohne Visum 90 Tage. Verl\u00e4ngerbar auf 180 Tage (Abkommen Deutschland-Japan).' },
+        { label: 'Warnung', value: 'Japan ist streng bei wiederholten Einreisen. Mindestens 90 Tage Pause zwischen Aufenthalten empfohlen.' },
+        { label: 'Steuer', value: 'Japan besteuert nach Wohnsitz, nicht nach Aufenthaltstagen. Solange du keinen Lebensmittelpunkt in Japan hast, kein Steuerrisiko.' }
       ]
     },
     {
@@ -473,9 +467,8 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage' },
-        { label: 'K-ETA', value: 'K-ETA bis Ende 2026 ausgesetzt, ab 2027 wieder Pflicht' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
+        { label: 'Einreise', value: 'Ohne Visum 90 Tage. Elektronische Reisegenehmigung (K-ETA) ist bis Ende 2026 ausgesetzt, ab 2027 wieder Pflicht.' },
+        { label: 'Steuer', value: 'Unter 183 Tagen: nur Einkommen das in S\u00fcdkorea verdient wird, wird besteuert.' }
       ]
     },
     {
@@ -487,9 +480,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Passstempel (max. 180 Tage, im Ermessen des Officers \u2014 oft nur 30-90!)' },
-        { label: 'Steuer', value: 'Kalenderjahr 183 Tage + "Centro de intereses vitales"' },
-        { label: 'Tipp', value: 'Beliebte Langzeit-Base f\u00fcr PTs (Playa, CDMX)' }
+        { label: 'Einreise', value: 'Per Passstempel bis zu 180 Tage. Achtung: Der Grenzbeamte entscheidet \u00fcber die Dauer, oft werden nur 30-90 Tage gestempelt!' },
+        { label: 'Steuer', value: 'Ab 183 Tagen im Kalenderjahr steuerpflichtig. Auch m\u00f6glich wenn dein Lebensmittelpunkt in Mexiko liegt.' },
+        { label: 'Tipp', value: 'Beliebte Langzeit-Base f\u00fcr Perpetual Travelers (Playa del Carmen, Mexiko-Stadt)' }
       ]
     },
     {
@@ -501,9 +494,9 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 120, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
-        { label: 'Steuer', value: 'Territorial \u2014 nur lokales Einkommen' },
-        { label: 'Compliance', value: 'Geplanter Wohnsitz ab Nov 2026 (Finanznoma)' }
+        { label: 'Einreise', value: 'Ohne Visum 90 Tage' },
+        { label: 'Steuer', value: 'Nur Einkommen das in Paraguay verdient wird, wird besteuert. Dein LLC-Einkommen bleibt steuerfrei.' },
+        { label: 'Compliance', value: 'Geplant als Compliance-Wohnsitz ab November 2026 \u00fcber Finanznoma. Sch\u00fctzt gegen die erweiterte Steuerpflicht in Deutschland.' }
       ]
     }
   ],
