@@ -133,7 +133,7 @@ const DATA = {
       deps: 'LLC muss beauftragt sein'
     },
     {
-      date: '2026-06-15',
+      date: '2026-06-18',
       title: 'EIN beantragen (Express)',
       desc: 'US-Steuernummer f\u00fcr die LLC \u2014 \u00fcber Finanznoma Express in wenigen Tagen. Ohne EIN kein Bankkonto!',
       status: 'upcoming',
@@ -149,7 +149,7 @@ const DATA = {
       deps: 'LLC muss gegr\u00fcndet sein'
     },
     {
-      date: '2026-06-20',
+      date: '2026-06-25',
       title: 'Compliance-Adresse f\u00fcr LLC einrichten',
       desc: 'MailboxNow o.\u00e4. \u2014 echte Stra\u00dfenadresse auf die LLC, Stadt wo du NIE gemeldet warst. Erst m\u00f6glich wenn LLC gegr\u00fcndet ist.',
       status: 'upcoming',
@@ -210,12 +210,22 @@ const DATA = {
   // Nächste Aktionen (kontextbezogen, abhängig von Phase)
   actions: [
     {
-      title: 'Internationale Krankenversicherung vergleichen & abschließen',
+      title: 'Internationale KV recherchieren (SafetyWing, Foyer, Passportcard)',
       date: '2026-04-30',
       tag: 'warning',
-      tagText: 'Bald fällig',
+      tagText: 'Bald f\u00e4llig',
       completed: false,
-      id: 'kv',
+      id: 'kv-recherche',
+      phase: 'prep'
+    },
+    {
+      title: 'Internationale KV abschlie\u00dfen',
+      date: '2026-05-15',
+      tag: 'critical',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Muss VOR K\u00fcndigung der deutschen KV stehen',
+      completed: false,
+      id: 'kv-abschluss',
       phase: 'prep'
     },
     {
@@ -239,7 +249,7 @@ const DATA = {
     },
     {
       title: 'Compliance-Adresse f\u00fcr LLC einrichten (MailboxNow)',
-      date: '2026-06-20',
+      date: '2026-06-25',
       tag: 'info',
       tagText: 'Nach LLC-Gr\u00fcndung',
       dependency: 'Erst m\u00f6glich wenn LLC gegr\u00fcndet ist',
