@@ -79,11 +79,11 @@ const DATA = {
     },
     {
       date: '2026-06-02',
-      title: 'Private Versicherungen kündigen',
-      desc: 'Deutsche KV und private Versicherungen kündigen. Berufshaftpflicht behalten!',
+      title: 'Private Versicherungen k\u00fcndigen',
+      desc: 'Sonderk\u00fcndigungsrecht durch Abmeldung: Deutsche KV, Haftpflicht, Hausrat sofort k\u00fcndbar. Berufshaftpflicht BEHALTEN!',
       status: 'upcoming',
       phase: 'deregister',
-      deps: 'Ab Abmeldung möglich (Versicherungspflicht entfällt). Internationale KV muss vorher stehen.'
+      deps: 'Internationale KV muss vorher abgeschlossen sein. Sonderk\u00fcndigungsrecht greift ab Abmeldung.'
     },
     {
       date: '2026-06-20',
