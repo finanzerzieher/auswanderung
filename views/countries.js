@@ -6,7 +6,74 @@ window.Views = window.Views || {};
 window.Views.countries = (function () {
   var stays = [];
 
+  // Calculate days used respecting the country's rule type
   function calcDaysUsed(countryName) {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var country = DATA.countries.find(function (c) { return c.name === countryName; });
+    var ruleType = country ? (country.ruleType || 'total') : 'total';
+    var countryStays = stays.filter(function (s) { return s.country === countryName; });
+
+    if (ruleType === 'per_entry') {
+      // Return days of the current/most recent stay only
+      var current = countryStays.find(function (s) { return !s.exit_date; });
+      if (current) {
+        return Math.max(0, window.DateUtils.daysBetween(
+          window.DateUtils.parseLocalDate(current.entry_date), today));
+      }
+      // No open stay — find most recent
+      if (countryStays.length === 0) return 0;
+      var sorted = countryStays.slice().sort(function (a, b) {
+        return new Date(b.entry_date) - new Date(a.entry_date);
+      });
+      var last = sorted[0];
+      var entry = window.DateUtils.parseLocalDate(last.entry_date);
+      var exit = window.DateUtils.parseLocalDate(last.exit_date);
+      return Math.max(0, window.DateUtils.daysBetween(entry, exit));
+    }
+
+    if (ruleType === 'rolling') {
+      // Rolling window: count days within the last windowDays
+      var windowDays = (country && country.windowDays) || 180;
+      var windowStart = new Date(today);
+      windowStart.setDate(windowStart.getDate() - windowDays);
+      var total = 0;
+      countryStays.forEach(function (s) {
+        var entry = window.DateUtils.parseLocalDate(s.entry_date);
+        var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
+        // Clamp to window
+        if (exit < windowStart) return; // entirely before window
+        if (entry < windowStart) entry = windowStart;
+        if (exit > today) exit = today;
+        var days = window.DateUtils.daysBetween(entry, exit);
+        if (days > 0) total += days;
+      });
+      return total;
+    }
+
+    if (ruleType === 'continuous') {
+      // Current unbroken stay length
+      var current = countryStays.find(function (s) { return !s.exit_date; });
+      if (current) {
+        return Math.max(0, window.DateUtils.daysBetween(
+          window.DateUtils.parseLocalDate(current.entry_date), today));
+      }
+      return 0;
+    }
+
+    // Default: sum all days (for 183-day tax tracking etc.)
+    var total = 0;
+    countryStays.forEach(function (s) {
+      var entry = window.DateUtils.parseLocalDate(s.entry_date);
+      var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
+      var days = window.DateUtils.daysBetween(entry, exit);
+      if (days > 0) total += days;
+    });
+    return total;
+  }
+
+  // Total days in a country across all time (for 183-day tax check)
+  function calcTotalDays(countryName) {
     var today = new Date();
     today.setHours(0, 0, 0, 0);
     var total = 0;
@@ -15,8 +82,7 @@ window.Views.countries = (function () {
       var entry = window.DateUtils.parseLocalDate(s.entry_date);
       var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
       var days = window.DateUtils.daysBetween(entry, exit);
-      if (days < 0) days = 0;
-      total += days;
+      if (days > 0) total += days;
     });
     return total;
   }
@@ -68,10 +134,18 @@ window.Views.countries = (function () {
       </div>';
   }
 
+  function ruleTypeLabel(ruleType, windowDays) {
+    if (ruleType === 'per_entry') return 'pro Einreise';
+    if (ruleType === 'rolling') return 'je ' + (windowDays || 180) + ' Tage';
+    if (ruleType === 'continuous') return 'am St\u00fcck';
+    return 'gesamt';
+  }
+
   function renderCards() {
     var grid = document.getElementById('countryGrid');
     grid.innerHTML = DATA.countries.map(function (c) {
       var daysUsed = calcDaysUsed(c.name);
+      var totalDays = calcTotalDays(c.name);
       var pct = Math.round((daysUsed / c.maxStay) * 100);
       if (pct > 100) pct = 100;
       var fillClass = pct < 60 ? 'safe' : pct < 85 ? 'caution' : 'danger';
@@ -79,9 +153,10 @@ window.Views.countries = (function () {
       if (remaining < 0) remaining = 0;
       var isSchengen = c.schengen || window.Schengen.isSchengen(c.name);
       var schengenBadge = isSchengen ? '<span class="schengen-badge">Schengen</span>' : '';
-      // COMP-05: 183-Tage-Warnung
+      var ruleHint = ruleTypeLabel(c.ruleType, c.windowDays);
+      // COMP-05: 183-Tage-Warnung (basierend auf totalDays, nicht ruleType-spezifisch)
       var taxWarning = '';
-      if (daysUsed > 150) {
+      if (totalDays > 150) {
         taxWarning = '<div class="tax-residence-warning">Achtung: 183-Tage-Schwelle naht \u2014 m\u00f6gliche Steuerresidenz</div>';
       }
       return '\
@@ -96,7 +171,7 @@ window.Views.countries = (function () {
               <div class="country-stay-fill ' + fillClass + '" style="width: ' + pct + '%"></div>\
             </div>\
             <div class="country-stay-text">\
-              <span>' + daysUsed + ' von ' + c.maxStay + ' ' + c.stayUnit + '</span>\
+              <span>' + daysUsed + ' von ' + c.maxStay + ' Tage (' + ruleHint + ')</span>\
               <span>' + remaining + ' \u00fcbrig</span>\
             </div>\
           </div>\

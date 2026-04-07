@@ -300,6 +300,7 @@ const DATA = {
       maxStay: 60,
       stayUnit: 'Tage',
       daysUsed: 0,
+      ruleType: 'per_entry', // Max Tage pro Einreise
       rules: [
         { label: 'Visum', value: 'Visa Exemption 60 Tage' },
         { label: 'Verlängerung', value: '+30 Tage (Immigration Office)' },
@@ -313,6 +314,7 @@ const DATA = {
       maxStay: 90,
       stayUnit: 'Tage',
       daysUsed: 0,
+      ruleType: 'per_entry',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage' },
         { label: 'DE2 Visa', value: 'Digital Nomad Visa, 1 Jahr' },
@@ -325,6 +327,7 @@ const DATA = {
       maxStay: 365,
       stayUnit: 'Tage',
       daysUsed: 0,
+      ruleType: 'continuous', // Max ununterbrochener Aufenthalt
       rules: [
         { label: 'Visum', value: 'Visa-frei 1 Jahr' },
         { label: 'Steuer', value: 'Territorial — Auslandseinkommen steuerfrei' },
@@ -337,6 +340,7 @@ const DATA = {
       maxStay: 30,
       stayUnit: 'Tage',
       daysUsed: 0,
+      ruleType: 'per_entry',
       rules: [
         { label: 'Visum', value: 'VoA 30 Tage, verlängerbar auf 60' },
         { label: 'B211A', value: '60 Tage Business Visa' },
@@ -349,6 +353,8 @@ const DATA = {
       maxStay: 90,
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
+      ruleType: 'rolling', // Schengen 90/180
+      windowDays: 180,
       schengen: true,
       rules: [
         { label: 'Visum', value: 'Schengen 90/180 Tage' },
@@ -360,10 +366,12 @@ const DATA = {
       name: 'VAE (Dubai)',
       flag: '🇦🇪',
       maxStay: 90,
-      stayUnit: 'Tage',
+      stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
+      ruleType: 'rolling', // 90 Tage je 180 Tage
+      windowDays: 180,
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage' },
+        { label: 'Visum', value: 'Visa-frei 90 Tage je 180 Tage' },
         { label: 'Freelancer', value: 'Freelance Visa ab ~$1.000/Jahr' },
         { label: 'Steuer', value: '0% Einkommensteuer' }
       ]
