@@ -77,11 +77,12 @@ const DATA = {
       deps: 'Ab Abmeldung möglich (Versicherungspflicht entfällt). Internationale KV muss vorher stehen.'
     },
     {
-      date: '2026-05-15',
-      title: 'Compliance-Adresse organisieren',
-      desc: 'MailboxNow o.ä. — echte Straßenadresse, Stadt wo du NIE gemeldet warst',
+      date: '2026-06-20',
+      title: 'Compliance-Adresse f\u00fcr LLC einrichten',
+      desc: 'MailboxNow o.\u00e4. \u2014 echte Stra\u00dfenadresse auf die LLC, Stadt wo du NIE gemeldet warst. Erst m\u00f6glich wenn LLC gegr\u00fcndet ist.',
       status: 'upcoming',
-      phase: 'prep'
+      phase: 'llc',
+      deps: 'LLC muss gegr\u00fcndet sein'
     },
     {
       date: '2026-06-02',
@@ -195,10 +196,11 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'Compliance-Adresse für LLC organisieren (MailboxNow)',
-      date: '2026-05-15',
+      title: 'Compliance-Adresse f\u00fcr LLC einrichten (MailboxNow)',
+      date: '2026-06-20',
       tag: 'info',
-      tagText: 'Vorbereitung',
+      tagText: 'Nach LLC-Gr\u00fcndung',
+      dependency: 'Erst m\u00f6glich wenn LLC gegr\u00fcndet ist',
       completed: false,
       id: 'compliance-addr',
       phase: 'prep'
