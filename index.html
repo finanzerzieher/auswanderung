@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auswanderung — Command Center</title>
+  <title>Auswanderung — PT Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,77 +13,64 @@
   <div class="app">
     <nav class="nav">
       <div class="nav-brand">
-        <span class="nav-icon">✦</span>
+        <span class="nav-icon">&#10022;</span>
         <span class="nav-title">Auswanderung</span>
       </div>
       <div class="nav-links">
-        <a href="#" class="nav-link active" data-view="command-center">Übersicht</a>
-        <a href="#" class="nav-link" data-view="timeline">Zeitstrahl</a>
-        <a href="#" class="nav-link" data-view="countries">Länder & Visa</a>
-        <a href="#" class="nav-link" data-view="structure">Firmenstruktur</a>
+        <a href="#" class="nav-link active" data-view="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-view="stays">Aufenthalte</a>
+        <a href="#" class="nav-link" data-view="countries">L&auml;nder</a>
+        <a href="#" class="nav-link" data-view="timeline">Zeitplan</a>
         <a href="#" class="nav-link" data-view="documents">Dokumente</a>
-        <a href="#" class="nav-link" data-view="costs">Kosten</a>
+        <a href="#" class="nav-link" data-view="finances">Finanzen</a>
       </div>
       <div class="nav-date" id="currentDate"></div>
     </nav>
 
-    <!-- COMMAND CENTER -->
-    <main class="view active" id="view-command-center">
+    <!-- DASHBOARD -->
+    <main class="view active" id="view-dashboard">
       <header class="view-header">
         <div>
-          <h1 class="view-title">Was steht jetzt an?</h1>
-          <p class="view-subtitle" id="daysUntilDeparture"></p>
+          <h1 class="view-title">Was braucht Aufmerksamkeit?</h1>
+          <p class="view-subtitle">Kritische Infos auf einen Blick</p>
         </div>
-        <div class="phase-badge" id="currentPhaseBadge"></div>
       </header>
-
-      <!-- Countdown-Leiste -->
-      <section class="countdown-bar" id="countdownBar"></section>
-
-      <!-- Nächste kritische Schritte -->
-      <section class="section">
-        <h2 class="section-title">Nächste Schritte</h2>
-        <div class="action-list" id="nextActions"></div>
-      </section>
-
-      <!-- Offene Punkte -->
-      <section class="section">
-        <h2 class="section-title">Offene Punkte</h2>
-        <div class="open-items" id="openItems"></div>
-      </section>
-
-      <!-- Fortschritt -->
-      <section class="section">
-        <h2 class="section-title">Fortschritt</h2>
-        <div class="progress-overview" id="progressOverview"></div>
-      </section>
+      <div class="dash-content"></div>
     </main>
 
-    <!-- ZEITSTRAHL -->
-    <main class="view" id="view-timeline">
+    <!-- AUFENTHALTE -->
+    <main class="view" id="view-stays">
       <header class="view-header">
-        <h1 class="view-title">Zeitstrahl</h1>
-        <p class="view-subtitle">Alle Meilensteine und Abhängigkeiten</p>
+        <div>
+          <h1 class="view-title">Aufenthalte</h1>
+          <p class="view-subtitle">Ein-/Ausreise tracken und verwalten</p>
+        </div>
+        <button class="doc-upload-btn" id="stayAddBtn">+ Aufenthalt</button>
       </header>
-      <div class="timeline" id="timeline"></div>
+      <div id="staysContent"></div>
     </main>
 
-    <!-- LÄNDER & VISA -->
+    <!-- L&Auml;NDER -->
     <main class="view" id="view-countries">
       <header class="view-header">
-        <h1 class="view-title">Länder & Visa</h1>
-        <p class="view-subtitle">Aufenthaltsdauer, Regeln, Countdowns</p>
+        <div>
+          <h1 class="view-title">L&auml;nder</h1>
+          <p class="view-subtitle">Visa-Regeln und Steuer-Infos</p>
+        </div>
       </header>
+      <div class="country-search-wrap">
+        <input type="text" id="countrySearch" class="country-search-input" placeholder="Land suchen...">
+      </div>
       <div class="country-grid" id="countryGrid"></div>
     </main>
 
-    <!-- FIRMENSTRUKTUR -->
-    <main class="view" id="view-structure">
+    <!-- ZEITPLAN -->
+    <main class="view" id="view-timeline">
       <header class="view-header">
-        <h1 class="view-title">Firmenstruktur</h1>
-        <p class="view-subtitle">Zwei-Firmen-Modell im Überblick</p>
+        <h1 class="view-title">Zeitplan</h1>
+        <p class="view-subtitle">Fristen, Meilensteine, Compliance</p>
       </header>
-      <div class="structure-layout" id="structureLayout"></div>
+      <div id="timelineContent"></div>
     </main>
 
     <!-- DOKUMENTE -->
@@ -100,16 +87,17 @@
       </header>
       <div class="doc-categories" id="docCategories"></div>
     </main>
-    <!-- KOSTEN -->
-    <main class="view" id="view-costs">
+
+    <!-- FINANZEN -->
+    <main class="view" id="view-finances">
       <header class="view-header">
         <div>
-          <h1 class="view-title">Kosten</h1>
-          <p class="view-subtitle">Laufende und einmalige Kosten beider Firmen</p>
+          <h1 class="view-title">Finanzen</h1>
+          <p class="view-subtitle">Kosten und Firmenstruktur im &Uuml;berblick</p>
         </div>
-        <button class="doc-upload-btn" id="costAddBtn">+ Hinzuf&uuml;gen</button>
+        <button class="doc-upload-btn" id="financeAddBtn">+ Hinzuf&uuml;gen</button>
       </header>
-      <div id="costContainer"></div>
+      <div id="financeContainer"></div>
     </main>
   </div>
 
@@ -120,12 +108,12 @@
   <script src="lib/schengen.js"></script>
   <script src="data.js"></script>
   <script src="db.js"></script>
-  <script src="views/cmd.js"></script>
+  <script src="views/stays.js"></script>
+  <script src="views/dashboard.js"></script>
   <script src="views/timeline.js"></script>
   <script src="views/countries.js"></script>
-  <script src="views/structure.js"></script>
   <script src="views/documents.js"></script>
-  <script src="views/costs.js"></script>
+  <script src="views/finances.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

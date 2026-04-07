@@ -1,9 +1,9 @@
 // =============================================
-// AUSWANDERUNG — View: Costs
+// AUSWANDERUNG — View: Finanzen (Costs + Structure)
 // =============================================
 
 window.Views = window.Views || {};
-window.Views.costs = (function () {
+window.Views.finances = (function () {
   var FIRMS = [
     { id: 'einzelunternehmen', name: 'Einzelunternehmen' },
     { id: 'llc', name: 'LLC (Wyoming)' },
@@ -69,12 +69,13 @@ window.Views.costs = (function () {
   }
 
   function renderUI() {
-    var container = document.getElementById('costContainer');
+    var container = document.getElementById('financeContainer');
     if (!container) return;
+    var esc = DateUtils.escapeHtml;
 
     var summary = calcSummary();
 
-    // Summary section
+    // Cost Summary
     var html = '\
       <div class="cost-summary">\
         <div class="cost-summary-card">\
@@ -91,13 +92,54 @@ window.Views.costs = (function () {
         </div>\
       </div>';
 
-    // Groups by firm
+    // Structure Section
+    var eu = DATA.structure.einzelunternehmen;
+    var llc = DATA.structure.llc;
+    var conn = DATA.structure.connector;
+
+    html += '<section class="section"><h2 class="section-title">Firmenstruktur</h2>';
+    html += '<div class="structure-layout">';
+    html += '\
+      <div class="structure-card">\
+        <div class="structure-card-title">' + eu.title + '</div>\
+        <div class="structure-card-subtitle">' + eu.subtitle + '</div>\
+        <div class="structure-rows">\
+          ' + eu.rows.map(function (r) {
+            return '\
+            <div class="structure-row">\
+              <div class="structure-row-label">' + r.label + '</div>\
+              <div class="structure-row-value">' + r.value + '</div>\
+            </div>';
+          }).join('') + '\
+        </div>\
+      </div>\
+      <div class="structure-card">\
+        <div class="structure-card-title">' + llc.title + '</div>\
+        <div class="structure-card-subtitle">' + llc.subtitle + '</div>\
+        <div class="structure-rows">\
+          ' + llc.rows.map(function (r) {
+            return '\
+            <div class="structure-row">\
+              <div class="structure-row-label">' + r.label + '</div>\
+              <div class="structure-row-value">' + r.value + '</div>\
+            </div>';
+          }).join('') + '\
+        </div>\
+      </div>\
+      <div class="structure-connector">\
+        <div class="structure-connector-title">' + conn.title + '</div>\
+        <div class="structure-connector-desc">' + conn.desc + '</div>\
+      </div>';
+    html += '</div></section>';
+
+    // Cost Groups by Firm
+    html += '<section class="section"><h2 class="section-title">Kosten nach Firma</h2>';
     FIRMS.forEach(function (firm) {
       var firmCosts = costs.filter(function (c) { return c.firm === firm.id; });
       html += '\
         <div class="cost-group">\
           <div class="cost-group-header">\
-            <div class="cost-group-title">' + DateUtils.escapeHtml(firm.name) + '</div>\
+            <div class="cost-group-title">' + esc(firm.name) + '</div>\
             <div class="cost-group-count">' + firmCosts.length + ' Posten</div>\
           </div>';
 
@@ -105,7 +147,6 @@ window.Views.costs = (function () {
         html += '<div class="cost-empty">Keine Kosten erfasst</div>';
       } else {
         firmCosts.forEach(function (c) {
-          var esc = DateUtils.escapeHtml;
           html += '\
             <div class="cost-item" data-cost-id="' + c.id + '">\
               <div class="cost-item-main">\
@@ -120,9 +161,9 @@ window.Views.costs = (function () {
             </div>';
         });
       }
-
       html += '</div>';
     });
+    html += '</section>';
 
     container.innerHTML = html;
 
@@ -216,7 +257,7 @@ window.Views.costs = (function () {
   }
 
   function initAddButton() {
-    var btn = document.getElementById('costAddBtn');
+    var btn = document.getElementById('financeAddBtn');
     if (btn) {
       btn.addEventListener('click', function () {
         showAddDialog();

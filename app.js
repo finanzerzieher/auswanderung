@@ -16,7 +16,10 @@
         changed = true;
       }
     });
-    if (changed) Views.cmd.render();
+    if (changed) {
+      Views.dashboard.render();
+      Views.timeline.render();
+    }
   }).catch(function (e) { console.warn('Could not load action states:', e); });
 
   // --- Navigation ---
@@ -39,12 +42,13 @@
 
   // --- Init (render immediately, load cloud data in background) ---
 
-  Views.cmd.render();
+  Views.stays.render();
+  Views.stays.initAddButton();
+  Views.dashboard.render();
   Views.timeline.render();
   Views.countries.render();
-  Views.structure.render();
   Views.documents.render();
   Views.documents.initUpload();
-  Views.costs.render();
-  Views.costs.initAddButton();
+  Views.finances.render();
+  Views.finances.initAddButton();
 })();

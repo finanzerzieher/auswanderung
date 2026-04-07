@@ -2064,3 +2064,175 @@ body {
   text-align: center;
   margin-bottom: var(--sp-6);
 }
+
+/* =============================================
+   DASHBOARD — Warnings & Counters
+   ============================================= */
+
+.dash-warnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+}
+
+.dash-warning {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dash-warning-danger {
+  background: var(--burgundy-subtle);
+  border: 1px solid var(--burgundy);
+  color: var(--burgundy);
+}
+
+.dash-warning-warning {
+  background: var(--amber-subtle);
+  border: 1px solid var(--amber);
+  color: var(--amber-text);
+}
+
+.dash-warning-caution {
+  background: var(--amber-subtle);
+  border: 1px solid var(--amber);
+  color: var(--amber-text);
+}
+
+.dash-counter {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: var(--sp-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--ink-secondary);
+}
+
+.dash-schengen-safe {
+  border-left: 3px solid var(--green);
+}
+
+.dash-schengen-caution {
+  border-left: 3px solid var(--amber);
+  color: var(--amber-text);
+}
+
+.dash-schengen-danger {
+  border-left: 3px solid var(--burgundy);
+  color: var(--burgundy);
+}
+
+/* =============================================
+   STAYS — Current Stay Card
+   ============================================= */
+
+.stay-current-card {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: var(--radius-md);
+  padding: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+.stay-current-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+
+.stay-current-flag {
+  font-size: 32px;
+}
+
+.stay-current-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+
+.stay-current-dates {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--sp-2);
+}
+
+.stay-current-days {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--passport);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--sp-3);
+}
+
+/* =============================================
+   STAYS — Month Groups
+   ============================================= */
+
+.stay-month-group {
+  margin-bottom: var(--sp-6);
+}
+
+.stay-month-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-tertiary);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* =============================================
+   COUNTRIES — Search
+   ============================================= */
+
+.country-search-wrap {
+  margin-bottom: var(--sp-5);
+}
+
+.country-search-input {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1px solid var(--border-emphasis);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink-primary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.country-search-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px var(--passport-ring);
+}
+
+.country-search-input::placeholder {
+  color: var(--ink-muted);
+}
+
+.country-card-clickable {
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.country-card-clickable:hover {
+  border-color: var(--passport);
+  transform: translateY(-1px);
+}
+
+.country-stay-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--passport);
+  margin-top: var(--sp-2);
+}
