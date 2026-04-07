@@ -308,7 +308,9 @@ const DATA = {
         { label: 'Status', value: 'Abgemeldet seit 02.06.2026' },
         { label: 'Risiko', value: 'Erw. beschr. Steuerpflicht bis 2036 (\u00a72 AStG)' },
         { label: 'Empfehlung', value: 'Max. 30 Tage/Jahr, keine Schl\u00fcsselgewalt' },
-        { label: 'Achtung', value: 'Nicht bei Karina melden!' }
+        { label: 'Achtung', value: 'Nicht bei Karina melden!' },
+        { label: 'Schl\u00fcsselgewalt', value: 'Zugang zu Wohnung (auch Karina) = Wohnsitz = volle Steuerpflicht!' },
+        { label: 'E.b.S. Ausl\u00f6ser', value: 'Einzelunternehmen k\u00f6nnte als "Unternehmer in DE" gelten \u2192 mit Finanznoma kl\u00e4ren!' }
       ]
     },
     {
@@ -323,7 +325,9 @@ const DATA = {
         { label: 'Visum', value: 'Visa Exemption 60 Tage' },
         { label: 'Verlängerung', value: '+30 Tage (Immigration Office)' },
         { label: 'DTV', value: '5 Jahre Multi-Entry, 180 Tage/Aufenthalt' },
-        { label: 'Steuer', value: 'Remittance-basiert seit 2024' }
+        { label: 'Steuer', value: 'Remittance-basiert seit 2024' },
+        { label: 'Landgrenze', value: 'Max 2 Visa-Exemption-Einreisen/Jahr, nur 30 Tage, NICHT verl\u00e4ngerbar!' },
+        { label: 'Remittance', value: 'Wise-Karte + ATM in Thailand = Remittance = steuerpflichtig bei >180 Tagen!' }
       ]
     },
     {
@@ -332,12 +336,13 @@ const DATA = {
       maxStay: 90,
       stayUnit: 'Tage',
       daysUsed: 0,
-      ruleType: 'per_entry',
+      ruleType: 'rolling',
+      windowDays: 180,
       taxThreshold: 182, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage' },
         { label: 'DE2 Visa', value: 'Digital Nomad Visa, 1 Jahr' },
-        { label: 'Steuer', value: 'Territorial — kein Auslandseinkommen besteuert' }
+        { label: 'Steuer', value: 'Seit 2022: Remittiertes Auslands-EK besteuert (Befreiung bis 2036 wenn im Herkunftsland besteuert)' }
       ]
     },
     {
@@ -347,7 +352,7 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'continuous', // Max ununterbrochener Aufenthalt
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'rolling_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 1 Jahr' },
         { label: 'Steuer', value: 'Territorial — Auslandseinkommen steuerfrei' },
@@ -361,11 +366,11 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'rolling_year',
       rules: [
         { label: 'Visum', value: 'VoA 30 Tage, verlängerbar auf 60' },
         { label: 'B211A', value: '60 Tage Business Visa' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen' }
+        { label: 'Steuer', value: 'ACHTUNG: Welteinkommen bei >183 Tagen! (5-35%)' }
       ]
     },
     {
@@ -380,9 +385,10 @@ const DATA = {
       schengen: true,
       rules: [
         { label: 'Visum', value: 'Schengen 90/180 Tage' },
+        { label: 'EU-B\u00fcrger', value: 'Als EU-B\u00fcrger gilt Schengen 90/180 NICHT \u2014 Freiz\u00fcgigkeit!' },
         { label: 'Steuer', value: '183 Tage in beliebigem 12-Monats-Zeitraum = steuerpflichtig!' },
-        { label: 'NHR', value: 'Non-Habitual Resident — Sonderstatus' },
-        { label: 'Achtung', value: 'Zählt gegen Schengen-Kontingent' }
+        { label: 'NHR', value: 'NHR beendet seit 2023, Nachfolger nur f\u00fcr bestimmte Berufsgruppen' },
+        { label: 'Achtung', value: 'Z\u00e4hlt gegen Schengen-Kontingent' }
       ]
     },
     {
@@ -392,7 +398,7 @@ const DATA = {
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
       ruleType: 'rolling', // 90 Tage je 180 Tage
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'rolling_year',
       windowDays: 180,
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage je 180 Tage' },
@@ -409,9 +415,10 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
+        { label: 'Visa-frei', value: '45 Tage ohne Visum (Deutschpass, seit Aug 2023)' },
         { label: 'Visum', value: 'E-Visa 90 Tage (Single/Multiple Entry)' },
         { label: 'Verl\u00e4ngerung', value: 'Vor Ort m\u00f6glich' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen besteuert' }
+        { label: 'Steuer', value: 'ACHTUNG: Welteinkommen bei >183 Tagen! (5-35%)' }
       ]
     },
     {
@@ -450,11 +457,11 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
-      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      taxThreshold: 0, taxThresholdType: 'calendar_year',
       rules: [
         { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
-        { label: 'Verl\u00e4ngerung', value: 'Nicht m\u00f6glich \u2014 Ausreise n\u00f6tig' },
-        { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
+        { label: 'Verl\u00e4ngerung', value: 'Verl\u00e4ngerung auf 180 Tage m\u00f6glich (bilaterales DE-JP Abkommen)' },
+        { label: 'Steuer', value: 'Domizil-basiert (kein fester Tagesschwellwert). Non-perm. Resident: Japan-EK + remittiertes Ausland-EK' }
       ]
     },
     {
@@ -466,7 +473,8 @@ const DATA = {
       ruleType: 'per_entry',
       taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 90 Tage (K-ETA n\u00f6tig)' },
+        { label: 'Visum', value: 'Visa-frei 90 Tage' },
+        { label: 'K-ETA', value: 'K-ETA bis Ende 2026 ausgesetzt, ab 2027 wieder Pflicht' },
         { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
       ]
     },
@@ -477,10 +485,10 @@ const DATA = {
       stayUnit: 'Tage',
       daysUsed: 0,
       ruleType: 'per_entry',
-      taxThreshold: 183, taxThresholdType: 'rolling_year',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
       rules: [
-        { label: 'Visum', value: 'Visa-frei 180 Tage (FMM-Karte)' },
-        { label: 'Steuer', value: '183 Tage in beliebigem 12-Monats-Zeitraum = steuerpflichtig!' },
+        { label: 'Visum', value: 'Passstempel (max. 180 Tage, im Ermessen des Officers \u2014 oft nur 30-90!)' },
+        { label: 'Steuer', value: 'Kalenderjahr 183 Tage + "Centro de intereses vitales"' },
         { label: 'Tipp', value: 'Beliebte Langzeit-Base f\u00fcr PTs (Playa, CDMX)' }
       ]
     },

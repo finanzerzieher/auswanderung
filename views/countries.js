@@ -219,7 +219,7 @@ window.Views.countries = (function () {
       var ruleHint = ruleTypeLabel(c.ruleType, c.windowDays);
       // COMP-05: Steuerresidenz-Warnung — Kalenderjahr ODER rollendes Jahr
       var taxWarning = '';
-      var taxThreshold = c.taxThreshold || 183;
+      var taxThreshold = (c.taxThreshold !== undefined && c.taxThreshold !== null) ? c.taxThreshold : 183;
       var taxType = c.taxThresholdType || 'calendar_year';
       var currentYear = new Date().getFullYear();
       var taxWarnThreshold = Math.max(0, taxThreshold - 30);
@@ -235,13 +235,27 @@ window.Views.countries = (function () {
           taxWarning = '<div class="tax-residence-warning">Achtung: ' + daysInYear + ' von ' + taxThreshold + ' Tagen in ' + DateUtils.escapeHtml(c.name) + ' (Kalenderjahr ' + currentYear + ') \u2014 Steuerresidenz-Schwelle naht</div>';
         }
       }
+      // Fix A: Overstay-Warnung
+      var overstayWarning = '';
+      if (daysUsed > c.maxStay) {
+        var overstayDays = daysUsed - c.maxStay;
+        overstayWarning = '<div class="overstay-warning">OVERSTAY! Du bist ' + overstayDays + ' Tage \u00fcber dem Limit von ' + c.maxStay + ' Tagen in ' + DateUtils.escapeHtml(c.name) + '!</div>';
+      }
+      // Fix B: Schengen-Gesamtverbrauch
+      var schengenHint = '';
+      if (isSchengen && window.Schengen) {
+        var schengenResult = window.Schengen.calculate(stays);
+        schengenHint = '<div class="schengen-country-hint">Schengen gesamt: ' + schengenResult.daysUsed + '/90 Tage (dieses Land: ' + daysUsed + ' Tage)</div>';
+      }
       return '\
         <div class="country-card">\
           <div class="country-header">\
             <div class="country-name">' + c.name + ' ' + schengenBadge + '</div>\
             <div class="country-flag">' + c.flag + '</div>\
           </div>\
+          ' + overstayWarning + '\
           ' + taxWarning + '\
+          ' + schengenHint + '\
           <div class="country-stay">\
             <div class="country-stay-bar">\
               <div class="country-stay-fill ' + fillClass + '" style="width: ' + pct + '%"></div>\
@@ -290,6 +304,12 @@ window.Views.countries = (function () {
       if (isOpen && days > 90) {
         forgottenWarning = '<div class="stay-forgotten-warning">Bist du noch in ' + esc(s.country) + '? Dieser Aufenthalt ist seit ' + days + ' Tagen offen.</div>';
       }
+      // Fix A: Overstay in History
+      var overstayHistoryWarning = '';
+      if (country && country.maxStay && days > country.maxStay) {
+        var overDays = days - country.maxStay;
+        overstayHistoryWarning = '<div class="overstay-warning">OVERSTAY! ' + overDays + ' Tage \u00fcber dem Limit von ' + country.maxStay + ' Tagen!</div>';
+      }
       return '\
         <div class="stay-item" data-stay-id="' + s.id + '">\
           <div class="stay-item-main">\
@@ -301,6 +321,7 @@ window.Views.countries = (function () {
             <div class="stay-item-days">' + days + ' Tage' + (isOpen ? ' (laufend)' : '') + '</div>\
             ' + (s.notes ? '<div class="stay-item-notes">' + esc(s.notes) + '</div>' : '') + '\
             ' + forgottenWarning + '\
+            ' + overstayHistoryWarning + '\
           </div>\
           <div class="stay-item-actions">\
             <button class="stay-item-edit" data-id="' + s.id + '" title="Bearbeiten">\u270E</button>\
@@ -482,6 +503,22 @@ window.Views.countries = (function () {
         return;
       }
 
+      // Fix C: Overlap-Erkennung — offene Aufenthalte in anderen Ländern
+      var openInOther = stays.find(function (s) {
+        return !s.exit_date && s.country !== country && (!isEdit || s.id !== editStay.id);
+      });
+      var closePromise = Promise.resolve();
+      if (openInOther) {
+        var closeIt = confirm('Du hast noch einen offenen Aufenthalt in ' + openInOther.country + '. Soll dieser auf gestern geschlossen werden?');
+        if (closeIt) {
+          var yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          var yesterdayStr = yesterday.toISOString().split('T')[0];
+          openInOther.exit_date = yesterdayStr;
+          closePromise = DB.saveStay(openInOther);
+        }
+      }
+
       var stay = {
         id: isEdit ? editStay.id : Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         country: country,
@@ -490,7 +527,9 @@ window.Views.countries = (function () {
         notes: notes || null
       };
 
-      DB.saveStay(stay).then(function () {
+      closePromise.then(function () {
+        return DB.saveStay(stay);
+      }).then(function () {
         if (isEdit) {
           var idx = stays.findIndex(function (s) { return s.id === stay.id; });
           if (idx >= 0) stays[idx] = stay;
@@ -507,12 +546,26 @@ window.Views.countries = (function () {
     });
   }
 
+  var _firstLoad = true;
+
   function render() {
+    // Fix D: Offline-Warnung
+    var viewEl = document.getElementById('view-countries');
+    if (!DB.isOnline()) {
+      var offlineBanner = document.getElementById('offlineBanner');
+      if (!offlineBanner) {
+        offlineBanner = document.createElement('div');
+        offlineBanner.id = 'offlineBanner';
+        offlineBanner.className = 'offline-warning';
+        offlineBanner.innerHTML = '\u26A0 Offline \u2014 Daten nicht verf\u00fcgbar. Keine Entscheidungen auf Basis dieser Anzeige treffen!';
+        viewEl.insertBefore(offlineBanner, viewEl.firstChild);
+      }
+    }
+
     // Render cards immediately with 0 days
     renderCards();
 
     // Ensure Schengen counter exists
-    var viewEl = document.getElementById('view-countries');
     if (!document.getElementById('schengenCounter')) {
       var counter = document.createElement('div');
       counter.id = 'schengenCounter';
@@ -542,8 +595,17 @@ window.Views.countries = (function () {
       viewEl.appendChild(section);
     }
 
+    // Fix D: Lade-Hinweis bei erstem Laden
+    if (_firstLoad) {
+      var historyEl = document.getElementById('stayHistory');
+      if (historyEl) {
+        historyEl.innerHTML = '<div class="stay-empty">Daten werden geladen...</div>';
+      }
+    }
+
     // Load stays from Supabase and re-render
     DB.loadStays().then(function (data) {
+      _firstLoad = false;
       stays = data;
       renderCards();
       renderSchengenCounter();

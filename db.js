@@ -234,6 +234,11 @@ const DB = {
     } catch (e) { console.warn('saveCost:', e); throw e; }
   },
 
+  // --- Online-Status ---
+  isOnline: function () {
+    return sb != null;
+  },
+
   async deleteCost(id) {
     if (!sb) return;
     try {

@@ -2016,3 +2016,51 @@ body {
 .export-data-link:hover {
   background: var(--passport-ring);
 }
+
+/* =============================================
+   OVERSTAY WARNING
+   ============================================= */
+
+.overstay-warning {
+  padding: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-3);
+  background: var(--burgundy-subtle);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-sm);
+  color: var(--burgundy);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* =============================================
+   SCHENGEN COUNTRY HINT
+   ============================================= */
+
+.schengen-country-hint {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--passport);
+  background: var(--passport-subtle);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--sp-3);
+}
+
+/* =============================================
+   OFFLINE WARNING
+   ============================================= */
+
+.offline-warning {
+  padding: var(--sp-4) var(--sp-6);
+  background: var(--burgundy-subtle);
+  border: 1px solid var(--burgundy);
+  border-radius: var(--radius-md);
+  color: var(--burgundy);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: var(--sp-6);
+}
