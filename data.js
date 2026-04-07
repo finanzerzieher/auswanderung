@@ -258,11 +258,11 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'Flug nach Bangkok buchen',
-      date: '2026-05-15',
-      tag: 'warning',
-      tagText: 'Bald f\u00e4llig',
-      completed: false,
+      title: 'Flug nach Bangkok gebucht \u2014 06.06.2026',
+      date: null,
+      tag: 'info',
+      tagText: 'Erledigt',
+      completed: true,
       id: 'flug',
       phase: 'prep'
     },
