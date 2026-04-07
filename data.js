@@ -340,6 +340,7 @@ const DATA = {
       maxStay: 90,
       stayUnit: 'Tage / 180 Tage',
       daysUsed: 0,
+      schengen: true,
       rules: [
         { label: 'Visum', value: 'Schengen 90/180 Tage' },
         { label: 'NHR', value: 'Non-Habitual Resident — Sonderstatus' },

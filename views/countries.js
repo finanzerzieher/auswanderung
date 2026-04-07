@@ -21,6 +21,53 @@ window.Views.countries = (function () {
     return total;
   }
 
+  function renderSchengenCounter() {
+    var container = document.getElementById('schengenCounter');
+    if (!container) return;
+
+    var result = window.Schengen.calculate(stays);
+    var pct = Math.round((result.daysUsed / 90) * 100);
+    if (pct > 100) pct = 100;
+
+    var colorClass = 'schengen-safe';
+    if (result.daysUsed > 76) {
+      colorClass = 'schengen-danger';
+    } else if (result.daysUsed >= 60) {
+      colorClass = 'schengen-caution';
+    }
+
+    var warningHtml = '';
+    if (result.daysRemaining < 14) {
+      warningHtml = '\
+        <div class="schengen-warning">\
+          Achtung: Nur noch ' + result.daysRemaining + ' Schengen-Tage \u00fcbrig!\
+        </div>';
+    }
+
+    var windowStartStr = window.DateUtils.formatDate(
+      result.windowStart.toISOString().split('T')[0]
+    );
+    var windowEndStr = window.DateUtils.formatDate(
+      result.windowEnd.toISOString().split('T')[0]
+    );
+
+    container.innerHTML = '\
+      <div class="schengen-block ' + colorClass + '">\
+        <div class="schengen-main">\
+          <div class="schengen-number">' + result.daysRemaining + '</div>\
+          <div class="schengen-label">Tage verbleibend</div>\
+        </div>\
+        <div class="schengen-detail">\
+          <div class="schengen-bar-track">\
+            <div class="schengen-bar-fill ' + colorClass + '" style="width: ' + pct + '%"></div>\
+          </div>\
+          <div class="schengen-text">' + result.daysUsed + ' von 90 Tagen genutzt im letzten 180-Tage-Fenster</div>\
+          <div class="schengen-window">' + windowStartStr + ' \u2014 ' + windowEndStr + '</div>\
+        </div>\
+        ' + warningHtml + '\
+      </div>';
+  }
+
   function renderCards() {
     var grid = document.getElementById('countryGrid');
     grid.innerHTML = DATA.countries.map(function (c) {
@@ -30,10 +77,12 @@ window.Views.countries = (function () {
       var fillClass = pct < 60 ? 'safe' : pct < 85 ? 'caution' : 'danger';
       var remaining = c.maxStay - daysUsed;
       if (remaining < 0) remaining = 0;
+      var isSchengen = c.schengen || window.Schengen.isSchengen(c.name);
+      var schengenBadge = isSchengen ? '<span class="schengen-badge">Schengen</span>' : '';
       return '\
         <div class="country-card">\
           <div class="country-header">\
-            <div class="country-name">' + c.name + '</div>\
+            <div class="country-name">' + c.name + ' ' + schengenBadge + '</div>\
             <div class="country-flag">' + c.flag + '</div>\
           </div>\
           <div class="country-stay">\
@@ -97,6 +146,7 @@ window.Views.countries = (function () {
         DB.deleteStay(id).then(function () {
           stays = stays.filter(function (s) { return s.id !== id; });
           renderCards();
+          renderSchengenCounter();
           renderHistory();
         });
       });
@@ -168,6 +218,7 @@ window.Views.countries = (function () {
       DB.saveStay(stay).then(function () {
         stays.unshift(stay);
         renderCards();
+        renderSchengenCounter();
         renderHistory();
         overlay.remove();
       }).catch(function (e) {
@@ -180,8 +231,17 @@ window.Views.countries = (function () {
     // Render cards immediately with 0 days
     renderCards();
 
-    // Ensure stay sections exist
+    // Ensure Schengen counter exists
     var viewEl = document.getElementById('view-countries');
+    if (!document.getElementById('schengenCounter')) {
+      var counter = document.createElement('div');
+      counter.id = 'schengenCounter';
+      var grid = document.getElementById('countryGrid');
+      viewEl.insertBefore(counter, grid);
+    }
+    renderSchengenCounter();
+
+    // Ensure stay sections exist
     if (!document.getElementById('stayAddBtn')) {
       // Add button in header
       var header = viewEl.querySelector('.view-header');
@@ -206,6 +266,7 @@ window.Views.countries = (function () {
     DB.loadStays().then(function (data) {
       stays = data;
       renderCards();
+      renderSchengenCounter();
       renderHistory();
     });
   }
