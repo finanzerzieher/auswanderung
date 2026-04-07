@@ -375,6 +375,97 @@ const DATA = {
         { label: 'Freelancer', value: 'Freelance Visa ab ~$1.000/Jahr' },
         { label: 'Steuer', value: '0% Einkommensteuer' }
       ]
+    },
+    {
+      name: 'Vietnam',
+      flag: '\u{1F1FB}\u{1F1F3}',
+      maxStay: 90,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'E-Visa 90 Tage (Single/Multiple Entry)' },
+        { label: 'Verl\u00e4ngerung', value: 'Vor Ort m\u00f6glich' },
+        { label: 'Steuer', value: 'Nur lokales Einkommen besteuert' }
+      ]
+    },
+    {
+      name: 'Kambodscha',
+      flag: '\u{1F1F0}\u{1F1ED}',
+      maxStay: 30,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa on Arrival 30 Tage (~$30)' },
+        { label: 'Verl\u00e4ngerung', value: 'Ordinary Visa (E-Type) verl\u00e4ngerbar' },
+        { label: 'Steuer', value: 'Nur lokales Einkommen' },
+        { label: 'Tipp', value: 'Beliebter Visa-Run-Stopp aus Thailand' }
+      ]
+    },
+    {
+      name: 'Laos',
+      flag: '\u{1F1F1}\u{1F1E6}',
+      maxStay: 30,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa on Arrival 30 Tage' },
+        { label: 'Steuer', value: 'Nur lokales Einkommen' },
+        { label: 'Tipp', value: 'Klassischer Visa-Run aus Thailand (Nong Khai/Vientiane)' }
+      ]
+    },
+    {
+      name: 'Japan',
+      flag: '\u{1F1EF}\u{1F1F5}',
+      maxStay: 90,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
+        { label: 'Verl\u00e4ngerung', value: 'Nicht m\u00f6glich \u2014 Ausreise n\u00f6tig' },
+        { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
+      ]
+    },
+    {
+      name: 'S\u00fcdkorea',
+      flag: '\u{1F1F0}\u{1F1F7}',
+      maxStay: 90,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa-frei 90 Tage (K-ETA n\u00f6tig)' },
+        { label: 'Steuer', value: 'Nur lokales Einkommen bei <183 Tagen' }
+      ]
+    },
+    {
+      name: 'Mexiko',
+      flag: '\u{1F1F2}\u{1F1FD}',
+      maxStay: 180,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa-frei 180 Tage (FMM-Karte)' },
+        { label: 'Steuer', value: 'Nur bei >183 Tagen oder lokaler T\u00e4tigkeit' },
+        { label: 'Tipp', value: 'Beliebte Langzeit-Base f\u00fcr PTs (Playa, CDMX)' }
+      ]
+    },
+    {
+      name: 'Paraguay',
+      flag: '\u{1F1F5}\u{1F1FE}',
+      maxStay: 90,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'per_entry',
+      rules: [
+        { label: 'Visum', value: 'Visa-frei 90 Tage (Deutschpass)' },
+        { label: 'Steuer', value: 'Territorial \u2014 nur lokales Einkommen' },
+        { label: 'Compliance', value: 'Geplanter Wohnsitz ab Nov 2026 (Finanznoma)' }
+      ]
     }
   ],
 

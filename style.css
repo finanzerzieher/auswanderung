@@ -1947,3 +1947,63 @@ body {
   color: var(--ink-muted);
   margin-left: auto;
 }
+
+/* =============================================
+   CURRENT LOCATION BANNER
+   ============================================= */
+
+.current-location-banner {
+  padding: var(--sp-4) var(--sp-6);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--sp-6);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+}
+
+.current-location-banner.active {
+  background: var(--green-subtle);
+  color: var(--green-text);
+  border: 1px solid rgba(61, 122, 74, 0.2);
+}
+
+.current-location-banner.inactive {
+  background: var(--surface-inset);
+  color: var(--ink-muted);
+  border: 1px solid var(--border-soft);
+}
+
+/* =============================================
+   FORGOTTEN STAY WARNING
+   ============================================= */
+
+.stay-forgotten-warning {
+  margin-top: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--amber-subtle);
+  color: var(--amber-text);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* =============================================
+   EXPORT DATA LINK
+   ============================================= */
+
+.export-data-link {
+  display: inline-block;
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--passport-subtle);
+  color: var(--passport);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.export-data-link:hover {
+  background: var(--passport-ring);
+}

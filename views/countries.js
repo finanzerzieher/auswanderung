@@ -16,10 +16,12 @@ window.Views.countries = (function () {
 
     if (ruleType === 'per_entry') {
       // Return days of the current/most recent stay only
+      // Ein- UND Ausreisetag zählen => daysBetween + 1
       var current = countryStays.find(function (s) { return !s.exit_date; });
       if (current) {
-        return Math.max(0, window.DateUtils.daysBetween(
-          window.DateUtils.parseLocalDate(current.entry_date), today));
+        var days = window.DateUtils.daysBetween(
+          window.DateUtils.parseLocalDate(current.entry_date), today);
+        return Math.max(0, days > 0 ? days + 1 : (days === 0 ? 1 : 0));
       }
       // No open stay — find most recent
       if (countryStays.length === 0) return 0;
@@ -29,11 +31,13 @@ window.Views.countries = (function () {
       var last = sorted[0];
       var entry = window.DateUtils.parseLocalDate(last.entry_date);
       var exit = window.DateUtils.parseLocalDate(last.exit_date);
-      return Math.max(0, window.DateUtils.daysBetween(entry, exit));
+      var days = window.DateUtils.daysBetween(entry, exit);
+      return Math.max(0, days > 0 ? days + 1 : (days === 0 ? 1 : 0));
     }
 
     if (ruleType === 'rolling') {
       // Rolling window: count days within the last windowDays
+      // Ein- UND Ausreisetag zählen => daysBetween + 1
       var windowDays = (country && country.windowDays) || 180;
       var windowStart = new Date(today);
       windowStart.setDate(windowStart.getDate() - windowDays);
@@ -46,33 +50,37 @@ window.Views.countries = (function () {
         if (entry < windowStart) entry = windowStart;
         if (exit > today) exit = today;
         var days = window.DateUtils.daysBetween(entry, exit);
-        if (days > 0) total += days;
+        if (days > 0) total += days + 1;
       });
       return total;
     }
 
     if (ruleType === 'continuous') {
       // Current unbroken stay length
+      // Ein- UND Ausreisetag zählen => daysBetween + 1
       var current = countryStays.find(function (s) { return !s.exit_date; });
       if (current) {
-        return Math.max(0, window.DateUtils.daysBetween(
-          window.DateUtils.parseLocalDate(current.entry_date), today));
+        var days = window.DateUtils.daysBetween(
+          window.DateUtils.parseLocalDate(current.entry_date), today);
+        return Math.max(0, days > 0 ? days + 1 : (days === 0 ? 1 : 0));
       }
       return 0;
     }
 
     // Default: sum all days (for 183-day tax tracking etc.)
+    // Ein- UND Ausreisetag zählen => daysBetween + 1
     var total = 0;
     countryStays.forEach(function (s) {
       var entry = window.DateUtils.parseLocalDate(s.entry_date);
       var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
       var days = window.DateUtils.daysBetween(entry, exit);
-      if (days > 0) total += days;
+      if (days > 0) total += days + 1;
     });
     return total;
   }
 
   // Total days in a country across all time (for 183-day tax check)
+  // Ein- UND Ausreisetag zählen => daysBetween + 1
   function calcTotalDays(countryName) {
     var today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -82,7 +90,7 @@ window.Views.countries = (function () {
       var entry = window.DateUtils.parseLocalDate(s.entry_date);
       var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
       var days = window.DateUtils.daysBetween(entry, exit);
-      if (days > 0) total += days;
+      if (days > 0) total += days + 1;
     });
     return total;
   }
@@ -201,11 +209,18 @@ window.Views.countries = (function () {
       var entry = window.DateUtils.parseLocalDate(s.entry_date);
       var exit = s.exit_date ? window.DateUtils.parseLocalDate(s.exit_date) : today;
       var days = window.DateUtils.daysBetween(entry, exit);
-      if (days < 0) days = 0;
+      if (days > 0) days = days + 1; // Ein- UND Ausreisetag zählen
+      else if (days === 0) days = 1; // Gleicher Tag = 1 Tag
+      else days = 0;
       var isOpen = !s.exit_date;
       var country = DATA.countries.find(function (c) { return c.name === s.country; });
       var flag = country ? country.flag : (window.CountriesDB ? window.CountriesDB.getFlag(s.country) : '');
       var hasRules = !!country && country.rules && country.rules.length > 0;
+      // FIX 4: Warnung bei vergessener Ausreise (>90 Tage offen)
+      var forgottenWarning = '';
+      if (isOpen && days > 90) {
+        forgottenWarning = '<div class="stay-forgotten-warning">Bist du noch in ' + s.country + '? Dieser Aufenthalt ist seit ' + days + ' Tagen offen.</div>';
+      }
       return '\
         <div class="stay-item" data-stay-id="' + s.id + '">\
           <div class="stay-item-main">\
@@ -216,6 +231,7 @@ window.Views.countries = (function () {
             </div>\
             <div class="stay-item-days">' + days + ' Tage' + (isOpen ? ' (laufend)' : '') + '</div>\
             ' + (s.notes ? '<div class="stay-item-notes">' + s.notes + '</div>' : '') + '\
+            ' + forgottenWarning + '\
           </div>\
           <div class="stay-item-actions">\
             <button class="stay-item-edit" data-id="' + s.id + '" title="Bearbeiten">\u270E</button>\

@@ -48,6 +48,37 @@ window.Views.cmd = (function () {
     });
   }
 
+  function renderCurrentLocation(viewEl) {
+    var container = document.getElementById('currentLocationBanner');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'currentLocationBanner';
+      container.className = 'current-location-banner';
+      viewEl.insertBefore(container, viewEl.firstChild);
+    }
+
+    DB.loadStays().then(function (stays) {
+      var openStay = stays.find(function (s) { return !s.exit_date; });
+      if (openStay) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var entry = DateUtils.parseLocalDate(openStay.entry_date);
+        var daysSince = DateUtils.daysBetween(entry, today);
+        if (daysSince > 0) daysSince = daysSince + 1;
+        else if (daysSince === 0) daysSince = 1;
+        else daysSince = 0;
+        var country = DATA.countries.find(function (c) { return c.name === openStay.country; });
+        var flag = country ? country.flag : '';
+        var maxStay = country ? country.maxStay : '?';
+        container.innerHTML = '<span class="location-text">Aktuell: ' + flag + ' ' + openStay.country + ' \u2014 Tag ' + daysSince + ' von ' + maxStay + '</span>';
+        container.className = 'current-location-banner active';
+      } else {
+        container.innerHTML = '<span class="location-text">Kein aktiver Aufenthalt eingetragen</span>';
+        container.className = 'current-location-banner inactive';
+      }
+    });
+  }
+
   function render() {
     var parseLocalDate = DateUtils.parseLocalDate;
     var daysBetween = DateUtils.daysBetween;
@@ -180,6 +211,63 @@ window.Views.cmd = (function () {
 
     // COMP-04: Compliance-Sektion rendern
     renderCompliance();
+
+    // FIX 5: Aktueller Standort
+    var viewEl = document.getElementById('view-command-center');
+    renderCurrentLocation(viewEl);
+
+    // FIX 6: Export-Button
+    renderExportButton(viewEl);
+  }
+
+  function renderExportButton(viewEl) {
+    if (document.getElementById('exportSection')) return;
+    var section = document.createElement('section');
+    section.id = 'exportSection';
+    section.className = 'section';
+    section.innerHTML = '<h2 class="section-title">Daten</h2>' +
+      '<a href="#" id="exportDataBtn" class="export-data-link">Daten exportieren (JSON)</a>';
+    viewEl.appendChild(section);
+
+    document.getElementById('exportDataBtn').addEventListener('click', function (e) {
+      e.preventDefault();
+      var btn = e.target;
+      btn.textContent = 'Exportiere...';
+      btn.style.pointerEvents = 'none';
+
+      Promise.all([
+        DB.loadCompleted(),
+        DB.loadStays(),
+        DB.loadDocNotes(),
+        DB.loadCosts(),
+        DB.loadDocs()
+      ]).then(function (results) {
+        var exportData = {
+          exported_at: new Date().toISOString(),
+          action_states: results[0],
+          stays: results[1],
+          doc_notes: results[2],
+          costs: results[3],
+          documents: results[4]
+        };
+        var json = JSON.stringify(exportData, null, 2);
+        var blob = new Blob([json], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'auswanderung-export-' + new Date().toISOString().split('T')[0] + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        btn.textContent = 'Daten exportieren (JSON)';
+        btn.style.pointerEvents = '';
+      }).catch(function (err) {
+        alert('Export fehlgeschlagen: ' + err.message);
+        btn.textContent = 'Daten exportieren (JSON)';
+        btn.style.pointerEvents = '';
+      });
+    });
   }
 
   function renderCompliance() {
