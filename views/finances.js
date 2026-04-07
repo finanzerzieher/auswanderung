@@ -132,6 +132,70 @@ window.Views.finances = (function () {
       </div>';
     html += '</div></section>';
 
+    // Compliance-Pflichten
+    var now = new Date();
+    var currentYear = now.getFullYear();
+    var compItems = DATA.compliance.map(function (c) {
+      var item = { firm: c.firm, task: c.task, interval: c.interval, note: c.note, dueDate: null, dueDateStr: '' };
+      if (c.dueMonth !== null && c.dueDay !== null) {
+        var year = currentYear;
+        var candidate = new Date(year, c.dueMonth - 1, c.dueDay);
+        candidate.setHours(0, 0, 0, 0);
+        if (candidate < now) {
+          year++;
+          candidate = new Date(year, c.dueMonth - 1, c.dueDay);
+          candidate.setHours(0, 0, 0, 0);
+        }
+        item.dueDate = candidate;
+        item.dueDateStr = DateUtils.formatDate(
+          candidate.getFullYear() + '-' +
+          String(candidate.getMonth() + 1).padStart(2, '0') + '-' +
+          String(candidate.getDate()).padStart(2, '0')
+        );
+      } else {
+        item.dueDateStr = 'Datum offen';
+      }
+      return item;
+    });
+    compItems.sort(function (a, b) {
+      if (a.dueDate && b.dueDate) return a.dueDate - b.dueDate;
+      if (a.dueDate && !b.dueDate) return -1;
+      if (!a.dueDate && b.dueDate) return 1;
+      return 0;
+    });
+
+    html += '<section class="section"><h2 class="section-title">Compliance-Pflichten</h2>';
+    var TODAY = new Date(); TODAY.setHours(0,0,0,0);
+    compItems.forEach(function (item) {
+      var daysUntil = '';
+      var urgencyClass = '';
+      if (item.dueDate) {
+        var days = DateUtils.daysBetween(TODAY, item.dueDate);
+        if (days < 0) {
+          daysUntil = '\u00fcberf\u00e4llig';
+          urgencyClass = ' compliance-overdue';
+        } else if (days < 30) {
+          daysUntil = 'in ' + days + ' Tagen';
+          urgencyClass = ' compliance-soon';
+        } else {
+          daysUntil = 'in ' + days + ' Tagen';
+        }
+      }
+      html += '\
+        <div class="compliance-item' + urgencyClass + '">\
+          <div class="compliance-firm">' + esc(item.firm) + '</div>\
+          <div class="compliance-body">\
+            <div class="compliance-task">' + esc(item.task) + '</div>\
+            <div class="compliance-meta">\
+              <span class="compliance-date">' + esc(item.dueDateStr) + (daysUntil ? ' (' + esc(daysUntil) + ')' : '') + '</span>\
+              <span class="compliance-interval">' + esc(item.interval) + '</span>\
+            </div>\
+            ' + (item.note ? '<div class="compliance-note">' + esc(item.note) + '</div>' : '') + '\
+          </div>\
+        </div>';
+    });
+    html += '</section>';
+
     // Cost Groups by Firm
     html += '<section class="section"><h2 class="section-title">Kosten nach Firma</h2>';
     FIRMS.forEach(function (firm) {
