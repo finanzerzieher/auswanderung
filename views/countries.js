@@ -171,11 +171,12 @@ window.Views.countries = (function () {
       <div class="doc-dialog stay-dialog">\
         <div class="doc-dialog-title">Aufenthalt erfassen</div>\
         <label for="stayCountry">Land</label>\
-        <select id="stayCountry">\
+        <input type="text" id="stayCountry" list="stayCountryList" placeholder="Land eingeben..." required>\
+        <datalist id="stayCountryList">\
           ' + DATA.countries.map(function (c) {
-            return '<option value="' + c.name + '">' + c.flag + ' ' + c.name + '</option>';
+            return '<option value="' + c.name + '">';
           }).join('') + '\
-        </select>\
+        </datalist>\
         <label for="stayEntry">Einreise</label>\
         <input type="date" id="stayEntry" required>\
         <label for="stayExit">Ausreise <span style="color:var(--ink-muted);font-weight:400">(leer = noch da)</span></label>\
