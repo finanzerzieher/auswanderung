@@ -129,7 +129,7 @@ window.Views.countries = (function () {
       if (days < 0) days = 0;
       var isOpen = !s.exit_date;
       var country = DATA.countries.find(function (c) { return c.name === s.country; });
-      var flag = country ? country.flag : '';
+      var flag = country ? country.flag : (window.CountriesDB ? window.CountriesDB.getFlag(s.country) : '');
       return '\
         <div class="stay-item">\
           <div class="stay-item-main">\
@@ -171,12 +171,7 @@ window.Views.countries = (function () {
       <div class="doc-dialog stay-dialog">\
         <div class="doc-dialog-title">Aufenthalt erfassen</div>\
         <label for="stayCountry">Land</label>\
-        <input type="text" id="stayCountry" list="stayCountryList" placeholder="Land eingeben..." required>\
-        <datalist id="stayCountryList">\
-          ' + DATA.countries.map(function (c) {
-            return '<option value="' + c.name + '">';
-          }).join('') + '\
-        </datalist>\
+        <input type="text" id="stayCountry" placeholder="Land eingeben..." autocomplete="off" required>\
         <label for="stayEntry">Einreise</label>\
         <input type="date" id="stayEntry" required>\
         <label for="stayExit">Ausreise <span style="color:var(--ink-muted);font-weight:400">(leer = noch da)</span></label>\
@@ -189,6 +184,23 @@ window.Views.countries = (function () {
         </div>\
       </div>';
     document.body.appendChild(overlay);
+
+    // Init autocomplete on country input
+    var stayCountryInput = document.getElementById('stayCountry');
+    Autocomplete.create(stayCountryInput, {
+      source: function (query) {
+        return CountriesDB.search(query);
+      },
+      renderItem: function (item) {
+        var badge = item.schengen ? '<span class="ac-item-badge">Schengen</span>' : '';
+        return '<span class="ac-item-flag">' + item.flag + '</span>' +
+               '<span class="ac-item-name">' + item.nameDE + '</span>' +
+               badge;
+      },
+      onSelect: function (item, inputEl) {
+        inputEl.value = item.nameDE;
+      }
+    });
 
     // Set default entry date to today
     var todayStr = new Date().toISOString().split('T')[0];
