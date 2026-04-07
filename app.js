@@ -302,10 +302,20 @@
     return reqDoc.keywords.some(kw => names.some(n => n.includes(kw)));
   }
 
-  async function renderDocuments() {
+  function renderDocuments(docs, docNotes) {
+    // Can be called with cached data or freshly loaded
+    if (!docs && !docNotes) {
+      // Load from Supabase, then re-render
+      Promise.all([DB.loadDocs(), DB.loadDocNotes()])
+        .then(([d, n]) => renderDocuments(d, n))
+        .catch(e => {
+          console.warn('renderDocuments load error:', e);
+          renderDocuments([], {});
+        });
+      docs = [];
+      docNotes = {};
+    }
     const container = document.getElementById('docCategories');
-    const docs = await DB.loadDocs();
-    const docNotes = await DB.loadDocNotes();
 
     // --- Required docs checklist ---
     const presentCount = REQUIRED_DOCS.filter(r => isDocPresent(r, docs)).length;
@@ -513,5 +523,5 @@
   renderTimeline();
   renderCountries();
   renderStructure();
-  renderDocuments().catch(e => console.warn('Documents render error:', e));
+  renderDocuments();
 })();
