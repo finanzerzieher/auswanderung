@@ -2,7 +2,7 @@
 // AUSWANDERUNG — App Logic (Supabase-backed)
 // =============================================
 
-(async function () {
+(function () {
   const TODAY = new Date();
   TODAY.setHours(0, 0, 0, 0);
 
@@ -29,14 +29,18 @@
     return (bytes / 1048576).toFixed(1) + ' MB';
   }
 
-  // --- Load persisted state from Supabase ---
+  // --- Load persisted state from Supabase (non-blocking) ---
 
-  const completedMap = await DB.loadCompleted();
-  DATA.actions.forEach(a => {
-    if (completedMap[a.id] !== undefined) {
-      a.completed = completedMap[a.id];
-    }
-  });
+  DB.loadCompleted().then(completedMap => {
+    let changed = false;
+    DATA.actions.forEach(a => {
+      if (completedMap[a.id] !== undefined && a.completed !== completedMap[a.id]) {
+        a.completed = completedMap[a.id];
+        changed = true;
+      }
+    });
+    if (changed) renderCommandCenter();
+  }).catch(e => console.warn('Could not load action states:', e));
 
   // --- Navigation ---
 
@@ -503,11 +507,11 @@
     });
   }
 
-  // --- Init ---
+  // --- Init (render immediately, load cloud data in background) ---
 
   renderCommandCenter();
   renderTimeline();
   renderCountries();
   renderStructure();
-  renderDocuments();
+  renderDocuments().catch(e => console.warn('Documents render error:', e));
 })();
