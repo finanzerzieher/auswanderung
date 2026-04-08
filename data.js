@@ -306,11 +306,11 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'Verbrauchsvertr\u00e4ge auf Karina umschreiben (Strom, Internet)',
+      title: 'E.ON (Strom) + 1&1 (Internet) auf Karina umschreiben',
       date: '2026-05-15',
       tag: 'critical',
       tagText: 'Vor Abmeldung!',
-      dependency: 'Vertr\u00e4ge auf deinen Namen = Anknuepfungspunkt f\u00fcr Wohnsitz in Deutschland!',
+      dependency: 'Vertr\u00e4ge auf deinen Namen = Wohnsitz-Ankn\u00fcpfungspunkt in Deutschland!',
       completed: false,
       id: 'vertraege-umschreiben',
       phase: 'prep'
@@ -324,6 +324,65 @@ const DATA = {
       completed: false,
       id: 'verbrauchsrechnungen',
       phase: 'prep'
+    },
+    {
+      title: 'Adress\u00e4nderungen auf Caya: Berufshaftpflicht (CGPA), Steuerberater (Scholz/DATEV), Kassenkompass, topi, Qonto',
+      date: '2026-04-15',
+      tag: 'warning',
+      tagText: 'Jetzt m\u00f6glich',
+      dependency: 'Caya-Adresse steht \u2014 jetzt alle Anbieter des Einzelunternehmens umstellen.',
+      completed: false,
+      id: 'caya-umstellung',
+      phase: 'prep'
+    },
+    {
+      title: 'Deutsche Post PostScan k\u00fcndigen (Caya \u00fcbernimmt)',
+      date: '2026-04-30',
+      tag: 'info',
+      tagText: 'K\u00fcndigen',
+      completed: false,
+      id: 'postscan-kuendigen',
+      phase: 'prep'
+    },
+    {
+      title: 'HIGH/Telekom Mobilfunk k\u00fcndigen \u2192 internationaler Tarif',
+      date: '2026-05-15',
+      tag: 'warning',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Airalo eSIM, Google Fi oder lokale SIMs.',
+      completed: false,
+      id: 'telekom-kuendigen',
+      phase: 'prep'
+    },
+    {
+      title: 'Gothaer (Haftpflicht/Hausrat) k\u00fcndigen',
+      date: '2026-06-02',
+      tag: 'info',
+      tagText: 'Bei Abmeldung',
+      dependency: 'Sonderk\u00fcndigungsrecht durch Abmeldung.',
+      completed: false,
+      id: 'gothaer-kuendigen',
+      phase: 'deregister'
+    },
+    {
+      title: 'Grover: Ger\u00e4te zur\u00fcckgeben oder auskaufen',
+      date: '2026-05-31',
+      tag: 'critical',
+      tagText: 'Vor Ausreise!',
+      dependency: 'Aktive Mietvertr\u00e4ge m\u00fcssen vor Ausreise gekl\u00e4rt sein!',
+      completed: false,
+      id: 'grover',
+      phase: 'prep'
+    },
+    {
+      title: 'Nach LLC-Gr\u00fcndung: Meta Ads, Mollie, Superchat, CopeCart, IONOS, Hostinger auf LLC umstellen',
+      date: '2026-07-01',
+      tag: 'info',
+      tagText: 'Nach LLC',
+      dependency: 'Alle gesch\u00e4ftlichen Anbieter auf LLC-Compliance-Adresse + Wise IBAN.',
+      completed: false,
+      id: 'llc-umstellungen',
+      phase: 'transition'
     },
     {
       title: 'Erweiterte beschränkte Steuerpflicht prüfen',
