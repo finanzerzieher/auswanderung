@@ -78,9 +78,17 @@ const DATA = {
       phase: 'prep'
     },
     {
+      date: '2026-05-31',
+      title: 'Aus Wohnung abmelden / Mietvertrag',
+      desc: 'Aus dem Mietvertrag rausnehmen lassen oder eigenen Vertrag k\u00fcndigen. Best\u00e4tigung vom Vermieter aufheben! Karina hat eigenen Vertrag.',
+      status: 'upcoming',
+      phase: 'deregister',
+      deps: 'Vor der Abmeldung beim B\u00fcrgerb\u00fcro'
+    },
+    {
       date: '2026-06-02',
       title: 'Wohnsitz abmelden',
-      desc: 'Bürgerbüro Dortmund — "Längere Auslandsreise Südostasien"',
+      desc: 'B\u00fcrgerbüro Dortmund \u2014 "L\u00e4ngere Auslandsreise S\u00fcdostasien"',
       status: 'upcoming',
       phase: 'deregister'
     },

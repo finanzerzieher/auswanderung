@@ -31,7 +31,8 @@ window.Views.documents = (function () {
     { id: 'verbrauch', name: 'Verbrauchsrechnungen (Strom/Internet/Miete)', keywords: ['verbrauch', 'strom', 'internet', 'miete', 'rechnung', 'utility', 'nebenkosten'], note: 'Letzte Rechnungen Dortmund \u2014 f\u00fcr KYC/Bankkonten im Ausland' },
     { id: 'impfpass', name: 'Impfpass / Impfausweis', keywords: ['impf', 'vaccination', 'gelb', 'yellow'], note: 'Gelbfieberimpfung f\u00fcr S\u00fcdostasien/S\u00fcdamerika pr\u00fcfen' },
     { id: 'bankauszug', name: 'Kontoausz\u00fcge / Bankabrechnungen', keywords: ['kontoauszug', 'bankauszug', 'bankabrechnung', 'bank statement', 'kontoausz\u00fcge'], note: 'Letzte 3-6 Monate \u2014 f\u00fcr KYC, Kontoverlagerung, Nachweis Geldherkunft' },
-    { id: 'kreditkarte', name: 'Kreditkartenabrechnungen', keywords: ['kreditkarte', 'credit card', 'visa card', 'mastercard', 'abrechnung'], note: 'Letzte Abrechnungen \u2014 f\u00fcr KYC und Nachweis Zahlungshistorie' }
+    { id: 'kreditkarte', name: 'Kreditkartenabrechnungen', keywords: ['kreditkarte', 'credit card', 'visa card', 'mastercard', 'abrechnung'], note: 'Letzte Abrechnungen \u2014 f\u00fcr KYC und Nachweis Zahlungshistorie' },
+    { id: 'wohnung', name: 'Wohnungsabmeldung / Vermieter-Best\u00e4tigung', keywords: ['wohnung', 'mietvertrag', 'vermieter', 'auszug', 'k\u00fcndigung'], note: 'Best\u00e4tigung dass du nicht mehr im Mietvertrag stehst' }
   ];
 
   var pendingFiles = [];
