@@ -268,6 +268,16 @@ const DATA = {
       phase: 'prep'
     },
     {
+      title: 'Postweiterleitung bei Caya einrichten',
+      date: '2026-05-15',
+      tag: 'warning',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Post von der alten Dortmunder Adresse wird an Caya weitergeleitet und dort digitalisiert.',
+      completed: false,
+      id: 'postweiterleitung',
+      phase: 'prep'
+    },
+    {
       title: 'Kontotransaktionen exportieren (CSV, letzte 2-3 Jahre, alle Konten)',
       date: '2026-04-30',
       tag: 'warning',
