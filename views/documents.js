@@ -27,7 +27,9 @@ window.Views.documents = (function () {
     { id: 'dba', name: 'DBA-Registrierung', keywords: ['dba', 'doing business', 'trade name'], note: '"Viktor Frickel" ohne LLC' },
     { id: 'wise', name: 'Wise Business Dokumente', keywords: ['wise', 'business'], note: 'Belgische IBAN' },
     { id: 'int-kv', name: 'Internationale KV-Police', keywords: ['international', 'safetywing', 'foyer', 'passportcard', 'krankenversicherung'], note: 'Vor K\u00fcndigung der deutschen KV' },
-    { id: 'flug', name: 'Flugticket Bangkok', keywords: ['flug', 'flight', 'boarding', 'bangkok', 'ticket'], note: '06.06.2026 \u2014 Nachweis Ausreise' }
+    { id: 'flug', name: 'Flugticket Bangkok', keywords: ['flug', 'flight', 'boarding', 'bangkok', 'ticket'], note: '06.06.2026 \u2014 Nachweis Ausreise' },
+    { id: 'verbrauch', name: 'Verbrauchsrechnungen (Strom/Internet/Miete)', keywords: ['verbrauch', 'strom', 'internet', 'miete', 'rechnung', 'utility', 'nebenkosten'], note: 'Letzte Rechnungen Dortmund \u2014 f\u00fcr KYC/Bankkonten im Ausland' },
+    { id: 'impfpass', name: 'Impfpass / Impfausweis', keywords: ['impf', 'vaccination', 'gelb', 'yellow'], note: 'Gelbfieberimpfung f\u00fcr S\u00fcdostasien/S\u00fcdamerika pr\u00fcfen' }
   ];
 
   var pendingFiles = [];

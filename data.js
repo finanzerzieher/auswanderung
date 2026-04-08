@@ -258,6 +258,26 @@ const DATA = {
       phase: 'llc'
     },
     {
+      title: 'Impfpass pr\u00fcfen und digitalisieren',
+      date: '2026-05-01',
+      tag: 'warning',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Gelbfieberimpfung f\u00fcr S\u00fcdamerika (Paraguay!) pr\u00fcfen. Impfpass scannen und hochladen.',
+      completed: false,
+      id: 'impfpass',
+      phase: 'prep'
+    },
+    {
+      title: 'Verbrauchsrechnungen sammeln und digitalisieren',
+      date: '2026-05-01',
+      tag: 'warning',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Strom, Internet, Miete \u2014 letzte Rechnungen der Dortmunder Adresse. Brauchst du sp\u00e4ter f\u00fcr Bankkonto-Er\u00f6ffnungen und KYC-Pr\u00fcfungen im Ausland.',
+      completed: false,
+      id: 'verbrauchsrechnungen',
+      phase: 'prep'
+    },
+    {
       title: 'Erweiterte beschränkte Steuerpflicht prüfen',
       date: '2026-05-15',
       tag: 'critical',
