@@ -268,6 +268,16 @@ const DATA = {
       phase: 'prep'
     },
     {
+      title: 'Verbrauchsvertr\u00e4ge auf Karina umschreiben (Strom, Internet)',
+      date: '2026-05-15',
+      tag: 'critical',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Vertr\u00e4ge auf deinen Namen = Anknuepfungspunkt f\u00fcr Wohnsitz in Deutschland!',
+      completed: false,
+      id: 'vertraege-umschreiben',
+      phase: 'prep'
+    },
+    {
       title: 'Verbrauchsrechnungen sammeln und digitalisieren',
       date: '2026-05-01',
       tag: 'warning',
