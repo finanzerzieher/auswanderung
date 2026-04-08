@@ -276,6 +276,16 @@ const DATA = {
       phase: 'prep'
     },
     {
+      title: 'Internationalen Handytarif einrichten',
+      date: '2026-05-15',
+      tag: 'warning',
+      tagText: 'Vor Abmeldung!',
+      dependency: 'Deutschen Vertrag k\u00fcndigen/umstellen. Optionen: eSIM (Airalo, Holafly), lokale SIMs vor Ort, oder internationaler Tarif (z.B. Google Fi). Deutsche Nummer ggf. \u00fcber Satellite/Simquadrat behalten.',
+      completed: false,
+      id: 'handytarif',
+      phase: 'prep'
+    },
+    {
       title: 'Postweiterleitung bei Caya einrichten',
       date: '2026-05-15',
       tag: 'warning',
