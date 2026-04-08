@@ -268,6 +268,16 @@ const DATA = {
       phase: 'prep'
     },
     {
+      title: 'Kontotransaktionen exportieren (CSV, letzte 2-3 Jahre, alle Konten)',
+      date: '2026-04-30',
+      tag: 'warning',
+      tagText: 'Bald f\u00e4llig',
+      dependency: 'Alle Konten + Kreditkarten durchgehen. Versteckte Abos/Vertr\u00e4ge finden die gek\u00fcndigt oder umgeschrieben werden m\u00fcssen.',
+      completed: false,
+      id: 'csv-export',
+      phase: 'prep'
+    },
+    {
       title: 'Verbrauchsvertr\u00e4ge auf Karina umschreiben (Strom, Internet)',
       date: '2026-05-15',
       tag: 'critical',
