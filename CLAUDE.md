@@ -33,8 +33,8 @@
 
 ### Deutsches Einzelunternehmen (bleibt als leere Hülle)
 - Zweck: §34d-Zulassung + Berufshaftpflicht erhalten
-- Adresse: CAYA Postbox 1010050, 96035 Bamberg ✅ eingerichtet
-- **Tipp:** Caya hat eine alternative Adresse OHNE "Postbox" im Namen — muss aktiv angefragt werden! Wird nicht automatisch angezeigt.
+- Adresse: Viktor Frickel, c/o Caya 1010050, Am Börstig 5, 96052 Bamberg ✅ (Alternativ-Adresse ohne "Postbox")
+- **Alte Postbox-Adresse:** CAYA Postbox 1010050, 96035 Bamberg (nicht mehr verwenden)
 - Konto: Qonto — nur Minimalbetrieb (Berufshaftpflicht, IHK, Mini-Umsatz ~600–1.000€/Jahr)
 - Gewinnerzielungsabsicht aufrechterhalten
 - NICHT abmelden, keine Betriebsaufgabe
@@ -108,7 +108,7 @@ Selbstschuldnerische Bürgschaft (privat) bleibt bestehen — Maklerpool ist dad
 
 ## Offene Punkte
 
-- [ ] **Caya Alternativ-Adresse anfragen** — Adresse ohne "Postbox" im Namen
+- [x] ~~Caya Alternativ-Adresse~~ — c/o Caya 1010050, Am Börstig 5, 96052 Bamberg ✅
 - [ ] Compliance-Wohnsitz Paraguay — über Finanznoma, Gruppenflug voraussichtlich November 2026
 - [ ] Langfrist-Visa-Strategie Thailand/SEA
 - [ ] Wise Business Compliance-Risiko bei >10k/Mo langfristig

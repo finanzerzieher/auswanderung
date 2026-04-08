@@ -66,15 +66,15 @@ const DATA = {
     {
       date: '2026-04-07',
       title: 'EU-Postbox einrichten',
-      desc: 'Viktor Frickel, CAYA Postbox 1010050, 96035 Bamberg',
+      desc: 'Viktor Frickel, c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg',
       status: 'completed',
       phase: 'prep'
     },
     {
       date: '2026-04-14',
-      title: 'Caya: Alternativ-Adresse f\u00fcr Einzelunternehmen anfragen',
-      desc: 'F\u00fcr das Einzelunternehmen: Caya-Adresse OHNE "Postbox" im Namen anfragen. Das ist NICHT die LLC-Compliance-Adresse!',
-      status: 'upcoming',
+      title: 'Caya: Alternativ-Adresse eingerichtet',
+      desc: 'Viktor Frickel, c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg \u2014 ohne "Postbox" im Namen',
+      status: 'completed',
       phase: 'prep'
     },
     {
@@ -94,7 +94,7 @@ const DATA = {
     {
       date: '2026-06-02',
       title: 'Gewerbeamt: Adressänderung',
-      desc: 'Adresse auf CAYA Postbox 1010050, 96035 Bamberg ändern',
+      desc: 'Adresse auf c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg ändern',
       status: 'upcoming',
       phase: 'deregister',
       deps: 'Am Tag der Abmeldung'
@@ -229,7 +229,7 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'EU-Postbox eingerichtet — CAYA Postbox 1010050, 96035 Bamberg',
+      title: 'EU-Postbox eingerichtet — c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg',
       date: null,
       tag: 'info',
       tagText: 'Erledigt',
@@ -238,12 +238,12 @@ const DATA = {
       phase: 'prep'
     },
     {
-      title: 'Caya: Alternativ-Adresse f\u00fcr Einzelunternehmen anfragen',
-      date: '2026-04-14',
-      tag: 'warning',
-      tagText: 'Bald f\u00e4llig',
-      dependency: 'F\u00fcr das Einzelunternehmen, NICHT f\u00fcr die LLC! Caya zeigt das nicht automatisch.',
-      completed: false,
+      title: 'Caya: Alternativ-Adresse erledigt \u2014 c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg',
+      date: null,
+      tag: 'info',
+      tagText: 'Erledigt',
+      dependency: 'F\u00fcr das Einzelunternehmen, NICHT f\u00fcr die LLC!',
+      completed: true,
       id: 'caya-alt',
       phase: 'prep'
     },
@@ -581,7 +581,7 @@ const DATA = {
       subtitle: 'Leere Hülle — §34d + Berufshaftpflicht',
       rows: [
         { label: 'Zweck', value: '§34d-Zulassung + Berufshaftpflicht erhalten' },
-        { label: 'Adresse', value: 'CAYA Postbox 1010050, 96035 Bamberg' },
+        { label: 'Adresse', value: 'c/o Caya 1010050, Am B\u00f6rstig 5, 96052 Bamberg' },
         { label: 'Konto', value: 'Qonto — Minimalbetrieb' },
         { label: 'Umsatz', value: '~600–1.000€/Jahr (Gewinnerzielungsabsicht)' },
         { label: 'IHK', value: 'Mitgliedschaft aktiv' },
