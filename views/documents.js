@@ -29,7 +29,9 @@ window.Views.documents = (function () {
     { id: 'int-kv', name: 'Internationale KV-Police', keywords: ['international', 'safetywing', 'foyer', 'passportcard', 'krankenversicherung'], note: 'Vor K\u00fcndigung der deutschen KV' },
     { id: 'flug', name: 'Flugticket Bangkok', keywords: ['flug', 'flight', 'boarding', 'bangkok', 'ticket'], note: '06.06.2026 \u2014 Nachweis Ausreise' },
     { id: 'verbrauch', name: 'Verbrauchsrechnungen (Strom/Internet/Miete)', keywords: ['verbrauch', 'strom', 'internet', 'miete', 'rechnung', 'utility', 'nebenkosten'], note: 'Letzte Rechnungen Dortmund \u2014 f\u00fcr KYC/Bankkonten im Ausland' },
-    { id: 'impfpass', name: 'Impfpass / Impfausweis', keywords: ['impf', 'vaccination', 'gelb', 'yellow'], note: 'Gelbfieberimpfung f\u00fcr S\u00fcdostasien/S\u00fcdamerika pr\u00fcfen' }
+    { id: 'impfpass', name: 'Impfpass / Impfausweis', keywords: ['impf', 'vaccination', 'gelb', 'yellow'], note: 'Gelbfieberimpfung f\u00fcr S\u00fcdostasien/S\u00fcdamerika pr\u00fcfen' },
+    { id: 'bankauszug', name: 'Kontoausz\u00fcge / Bankabrechnungen', keywords: ['kontoauszug', 'bankauszug', 'bankabrechnung', 'bank statement', 'kontoausz\u00fcge'], note: 'Letzte 3-6 Monate \u2014 f\u00fcr KYC, Kontoverlagerung, Nachweis Geldherkunft' },
+    { id: 'kreditkarte', name: 'Kreditkartenabrechnungen', keywords: ['kreditkarte', 'credit card', 'visa card', 'mastercard', 'abrechnung'], note: 'Letzte Abrechnungen \u2014 f\u00fcr KYC und Nachweis Zahlungshistorie' }
   ];
 
   var pendingFiles = [];
