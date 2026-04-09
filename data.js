@@ -667,6 +667,23 @@ const DATA = {
       ]
     },
     {
+      name: 'Zypern',
+      flag: '\u{1F1E8}\u{1F1FE}',
+      maxStay: 183,
+      stayUnit: 'Tage',
+      daysUsed: 0,
+      ruleType: 'calendar_year',
+      taxThreshold: 183, taxThresholdType: 'calendar_year',
+      rules: [
+        { label: 'Einreise', value: 'Als EU-B\u00fcrger unbegrenzt (Freiz\u00fcgigkeit). Kein Visum n\u00f6tig.' },
+        { label: 'Schengen', value: 'Zypern ist NICHT Schengen! Tage z\u00e4hlen NICHT gegen dein 90/180-Kontingent f\u00fcr Deutschland-Besuche.' },
+        { label: 'Steuer', value: 'Unter 183 Tagen pro Kalenderjahr: nicht steuerpflichtig. Dar\u00fcber: Einkommen wird mit 0-35% besteuert.' },
+        { label: 'Non-Dom', value: '17 Jahre lang Befreiung von Sondersteuer auf Dividenden und Zinsen. Gilt aber nur f\u00fcr Steuerresidenten \u2014 brauchst du nicht wenn du unter 183 Tagen bleibst.' },
+        { label: 'Warnung', value: 'Die 60-Tage-Regel NICHT unabsichtlich ausl\u00f6sen: Keine Firmenleitung in Zypern registrieren!' },
+        { label: 'Tipp', value: 'Ideale Base: EU-Stabilit\u00e4t, Englisch, schnelles Internet, g\u00fcnstig, kein Schengen-Verbrauch. Empfehlung: max. 5 Monate/Jahr.' }
+      ]
+    },
+    {
       name: 'Paraguay',
       flag: '\u{1F1F5}\u{1F1FE}',
       maxStay: 90,
